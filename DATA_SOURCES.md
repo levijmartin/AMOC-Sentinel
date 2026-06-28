@@ -25,6 +25,9 @@ Practical note:
 ### 2. Copernicus Marine
 **Purpose:** operational ocean and sea-surface intelligence
 
+General Copernicus access reference:
+- https://www.copernicus.eu/en/access-data
+
 Why use it:
 - excellent APIs and tooling
 - strong support for SST, reanalysis, altimetry, and regional ocean-state products

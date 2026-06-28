@@ -3,6 +3,10 @@
 ## Goal
 Use Copernicus Marine as a primary ocean-intelligence layer for StormShield Caribbean without overbuilding the MVP.
 
+## Reference links
+- General Copernicus access portal: https://www.copernicus.eu/en/access-data
+- Copernicus Marine products: https://data.marine.copernicus.eu/products
+
 ## Recommended first product categories
 
 ### 1. Sea Surface Temperature (SST)
