@@ -33,6 +33,7 @@ This repository is set up to help turn an idea into a submission-ready project w
 - `DATA_SOURCES.md` - recommended data stack and source strategy
 - `PITCH_PARAGRAPH.md` - buildathon-ready pitch paragraph
 - `docs/MVP_ARCHITECTURE.md` - agentic climate-risk MVP architecture
+- `docs/COPERNICUS_INGESTION_PLAN.md` - focused plan for Copernicus Marine MVP ingestion
 - `docs/SENSOR_GRID_REVIEW.md` - review of a possible future sensor compression concept
 - `docs/` - place for architecture, pitch, and research notes
 

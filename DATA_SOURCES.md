@@ -31,6 +31,31 @@ Use in MVP:
 - regional ocean-state snapshots
 - reanalysis context for Caribbean risk scoring
 
+#### Copernicus starter products for the MVP
+Start narrow. For the first buildathon version, prioritize a small group of product types rather than trying to ingest everything at once.
+
+Recommended first pulls:
+- **Sea Surface Temperature (SST)**
+  - use for warm-water conditions, anomaly detection, and marine heat context
+- **Regional or global ocean reanalysis / ocean state**
+  - use for broader Caribbean environmental context and background state reasoning
+- **Sea level anomaly / altimetry**
+  - use for circulation and coastal context where relevant
+- **Currents**
+  - use selectively if the demo needs movement or flow context
+
+Suggested MVP role for each:
+- SST -> near-surface heat and storm-supportive condition context
+- Reanalysis -> broader background ocean conditions
+- Sea level anomaly -> circulation and coastal signal support
+- Currents -> optional second-phase enhancement
+
+Practical ingestion guidance:
+- begin with one SST product and one reanalysis product
+- subset to a Caribbean bounding box to keep the prototype lightweight
+- store derived anomaly summaries instead of only raw full-resolution grids
+- use scheduled pulls rather than fully continuous ingestion for the MVP
+
 ### 3. CariCOOS and NOAA NDBC
 **Purpose:** Caribbean and local near-real-time observational data
 
