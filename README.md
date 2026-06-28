@@ -40,6 +40,7 @@ This repository is set up to help turn an idea into a submission-ready project w
 - `docs/RAPID_REFERENCE.md` - reference note for RAPID and its role in the project
 - `docs/X402_REFERENCE.md` - reference note for x402 and its commercialization role
 - `docs/IMPLEMENTATION_NOTES.md` - practical engineering guidance for the MVP stack
+- `docs/WORKFLOW_ORCHESTRATION_NOTES.md` - pipeline orchestration, QC, and review-flow guidance
 - `docs/SENSOR_GRID_REVIEW.md` - review of a possible future sensor compression concept
 - `docs/` - place for architecture, pitch, and research notes
 

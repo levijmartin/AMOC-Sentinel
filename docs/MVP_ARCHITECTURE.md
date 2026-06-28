@@ -140,6 +140,19 @@ Recommended non-role for MVP:
 
 In practice, the MVP should first generate useful alerts, summaries, and resilience reports. x402 can then be layered on top of those outputs as a machine-payable interface for developers, operators, or premium customers.
 
+## Workflow orchestration guidance
+
+The system should be designed as a durable workflow rather than a loose set of independent scripts.
+
+Recommended workflow shape:
+- ingest bounded Caribbean datasets on a schedule or trigger
+- run code-based validation and anomaly checks
+- track batch state and output status explicitly
+- route suspect inputs through confidence or review paths
+- generate alerts or reports only after structured processing
+
+A LangGraph-style orchestration pattern may be a strong fit because it supports stateful execution, branching, checkpoints, and optional human review pauses.
+
 ## Implementation guidance
 
 For this architecture, heavy data handling should remain in standard code rather than in the language-model layer.
