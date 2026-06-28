@@ -94,6 +94,22 @@ Outputs:
 - downloadable report
 - alert summaries
 
+## AMOC Atlas fit in the architecture
+
+AMOC Atlas should sit upstream of the operational MVP stack as a scientific reference layer rather than a runtime dependency.
+
+Recommended role:
+- inform AMOC-related framing and interpretation
+- support analysis and visualization ideas for Atlantic circulation context
+- improve scientific grounding for the climate/ocean intelligence layer
+
+Recommended non-role for MVP:
+- not a required live ingestion source
+- not the primary Caribbean operational data feed
+- not a blocker for shipping the first prototype
+
+In practice, AMOC Atlas supports the design of the signal-analysis and climate-risk reasoning layers, while operational inputs still come primarily from RAPID, Copernicus Marine, CariCOOS, NDBC, and optional Argo subsets.
+
 ## Suggested MVP stack
 
 ### Front end
