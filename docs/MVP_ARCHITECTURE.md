@@ -140,6 +140,16 @@ Recommended non-role for MVP:
 
 In practice, the MVP should first generate useful alerts, summaries, and resilience reports. x402 can then be layered on top of those outputs as a machine-payable interface for developers, operators, or premium customers.
 
+## Implementation guidance
+
+For this architecture, heavy data handling should remain in standard code rather than in the language-model layer.
+
+Recommended practice:
+- use Python and scientific data tooling for ingestion, parsing, subsetting, anomalies, and threshold checks
+- use the agent layer for interpretation, prioritization, explanation, and action planning
+- avoid passing giant raw datasets into LLM context windows
+- feed the reasoning layer compact summaries, anomaly flags, and structured signal outputs instead
+
 ## Suggested MVP stack
 
 ### Front end
