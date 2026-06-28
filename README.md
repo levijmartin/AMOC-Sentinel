@@ -30,6 +30,8 @@ This repository is set up to help turn an idea into a submission-ready project w
 - `BUILDATHON_NOTES.md` - summarized event notes and assumptions
 - `APPLICATION_CHECKLIST.md` - what to prepare for applying and submitting
 - `IDEA_CANVAS.md` - define the actual project idea
+- `MARKET_OPPORTUNITIES.md` - opportunity universe and strategic fit
+- `OPPORTUNITY_PRIORITIZATION.md` - ranked build directions and selection logic
 - `DATA_SOURCES.md` - recommended data stack and source strategy
 - `PITCH_PARAGRAPH.md` - buildathon-ready pitch paragraph
 - `docs/MVP_ARCHITECTURE.md` - agentic climate-risk MVP architecture
