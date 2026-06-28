@@ -41,6 +41,7 @@ This repository is set up to help turn an idea into a submission-ready project w
 - `docs/X402_REFERENCE.md` - reference note for x402 and its commercialization role
 - `docs/IMPLEMENTATION_NOTES.md` - practical engineering guidance for the MVP stack
 - `docs/WORKFLOW_ORCHESTRATION_NOTES.md` - pipeline orchestration, QC, and review-flow guidance
+- `docs/MIROFISH_REFERENCE.md` - reference note on reusable patterns from the local MiroFish repo
 - `docs/FUTURE_STATE_ARCHITECTURE.md` - long-term north-star architecture beyond the MVP
 - `docs/SENSOR_GRID_REVIEW.md` - review of a possible future sensor compression concept
 - `docs/` - place for architecture, pitch, and research notes

@@ -87,6 +87,16 @@ For the buildathon MVP:
 - include quality flags and confidence levels
 - reserve manual review as an optional future-ready path
 
+## Pattern borrowed from MiroFish
+A useful takeaway from the reviewed MiroFish repository is its staged system design: build the environment, run structured processing, generate reports, and support interaction afterward. For StormShield Caribbean, the domain is different, but the pattern is still useful.
+
+Adapted version for this project:
+- ingest and normalize environmental data
+- analyze and summarize risk signals
+- reason over localized exposure
+- generate resilience outputs
+- support follow-up operator interaction
+
 ## Bottom line
 The system should not be a loose collection of scripts. It should behave like a durable workflow:
 - ingest
