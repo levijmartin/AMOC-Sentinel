@@ -110,6 +110,21 @@ Recommended non-role for MVP:
 
 In practice, AMOC Atlas supports the design of the signal-analysis and climate-risk reasoning layers, while operational inputs still come primarily from RAPID, Copernicus Marine, CariCOOS, NDBC, and optional Argo subsets.
 
+## RAPID fit in the architecture
+
+RAPID should function as a core upstream Atlantic circulation signal source.
+
+Recommended role:
+- provide AMOC and overturning-circulation context
+- support large-scale ocean-state interpretation
+- strengthen scientific grounding for the climate/ocean intelligence layer
+
+Recommended non-role for MVP:
+- not a hyperlocal real-time weather feed
+- not the only operational source for user-facing risk alerts
+
+In practice, RAPID should feed the signal-analysis layer as a background Atlantic-context input, while Copernicus Marine and Caribbean observational feeds provide more operational ocean and local-condition signals.
+
 ## Suggested MVP stack
 
 ### Front end

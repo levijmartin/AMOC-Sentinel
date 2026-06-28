@@ -18,6 +18,10 @@ Use in MVP:
 - ingest summarized AMOC transport timeseries
 - use as a background climate/ocean signal rather than a direct short-term weather feed
 
+Practical note:
+- the RAPID download bundle appears to include NetCDF, Matlab, ASCII, vertical transport, grid timeseries, uncertainty-related files, meridional transports, and 2D gridded data
+- for the MVP, start with summarized or selected timeseries before taking on heavier processing
+
 ### 2. Copernicus Marine
 **Purpose:** operational ocean and sea-surface intelligence
 
