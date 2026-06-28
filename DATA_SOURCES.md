@@ -85,6 +85,9 @@ Use in MVP:
 ### OSNAP
 Use later for broader North Atlantic circulation context if the MVP expands into system-wide pattern modeling.
 
+### AMOC Atlas (`AMOCcommunity/amocatlas`)
+Use as a research/reference source for AMOC-related analysis patterns, scientific framing, and possible visualization ideas. Best treated as an upstream reference, not a core MVP dependency.
+
 ### World Ocean Database / World Ocean Atlas
 Use later for historical baseline and anomaly comparisons.
 
