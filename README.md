@@ -2,6 +2,13 @@
 
 Starter workspace for the Future Caribbean Agentic AI Buildathon.
 
+## Current concept
+**AMOC Sentinel**
+
+**Subtitle:** Cold Blob-to-Caribbean Risk OS
+
+**Core operating idea:** Record. Verify. Tokenize. Protect.
+
 ## Buildathon snapshot
 
 - Organizer: Future Caribbean

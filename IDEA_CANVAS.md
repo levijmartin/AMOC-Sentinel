@@ -1,13 +1,13 @@
 # Idea Canvas
 
 ## Project name
-StormShield Caribbean
+AMOC Sentinel
 
 ## Track
 Climate Risk
 
 ## One-line pitch
-StormShield Caribbean is an agentic climate-risk intelligence platform that helps Caribbean property owners and small businesses assess storm vulnerability, monitor ocean and environmental risk signals, and generate practical resilience action plans.
+AMOC Sentinel is a cold-blob-to-Caribbean risk operating system that tracks ocean and weather shifts, verifies data quality and provenance, tokenizes trusted data packets, and delivers actionable risk intelligence for Caribbean operators.
 
 ## Who is the user?
 Primary users:
@@ -20,12 +20,13 @@ Secondary users:
 - resilience-focused partners such as contractors, insurers, lenders, or advisors
 
 ## What painful problem are we solving?
-Many Caribbean property owners and small businesses understand that climate and storm risk is rising, but they do not know what to do first, which vulnerabilities matter most, or how to convert environmental signals into a realistic preparedness plan.
+Caribbean operators are exposed to storm, flood, outage, and coastal risk, but the intelligence chain is fragmented. Ocean and weather shifts, AMOC-related context, local observations, and operator decisions are spread across disconnected systems.
 
 Today the problem is fragmented:
 - ocean and weather information is scattered across technical sources
-- operators receive data, but not clear decisions
-- most people do not have a practical, phased resilience roadmap tied to their actual property and operating risk
+- operators receive data, but not trusted, verified decisions
+- there is limited linkage between Atlantic-scale context and Caribbean-local action
+- most users do not have a practical, phased resilience roadmap tied to their actual operating risk
 
 ## Why is this a Caribbean opportunity?
 The Caribbean faces recurring hurricane, flooding, coastal, and infrastructure risk, while many communities and operators remain underserved by practical resilience intelligence tools.
@@ -39,42 +40,43 @@ This is a strong regional opportunity because:
 ## Why does this need agentic AI?
 This is not just a dashboard problem. The system needs to:
 - gather environmental and ocean data from multiple public sources
-- interpret Atlantic and Caribbean context signals
-- ask follow-up questions about local exposure and infrastructure
-- prioritize vulnerabilities and tradeoffs
+- track ocean and weather shifts across Atlantic and Caribbean layers
+- verify data quality, provenance, and confidence before acting on it
+- convert trusted signals into compact, structured intelligence objects
+- prioritize vulnerabilities, thresholds, and tradeoffs
 - generate phased action plans based on the user’s actual situation
 
-An agentic workflow is useful because the system must move from raw signals to reasoned, user-specific decisions rather than just present charts.
+An agentic workflow is useful because the system must move from raw signals to verified, user-specific decisions rather than just present charts.
 
 ## Core workflow
 Describe the agent loop step by step.
 
 1. Ingestion agent pulls data from sources such as RAPID, Copernicus Marine, CariCOOS, NOAA NDBC, and optional Argo subsets.
-2. Validation and normalization agent cleans, aligns, and structures environmental signals for the Caribbean context.
-3. Signal analysis agent computes anomalies and interprets relevant climate and ocean conditions.
-4. Climate-risk reasoning agent combines those signals with user-provided property or business details.
+2. Validation and provenance agent cleans, aligns, signs, and structures environmental signals for Caribbean use.
+3. Signal analysis agent computes anomalies, AMOC/current-state context, and relevant climate/ocean conditions.
+4. Risk-intelligence agent combines those signals with user-provided property, business, or local operator details.
 5. Action-planning agent generates immediate, near-term, and longer-term resilience actions.
-6. Reporting layer produces a practical readiness summary or resilience roadmap the operator can act on.
+6. Reporting and delivery layer produces practical readiness summaries, action briefs, alerts, and API-ready intelligence outputs.
 
 ## MVP for the 21-day sprint
-- guided intake for property or business exposure
 - bounded Caribbean data ingestion using a small set of public sources
+- trusted signal intake with validation, provenance, and confidence flags
 - simplified environmental signal summaries and anomaly context
-- vulnerability scoring and prioritized risk reasoning
-- phased resilience action plan
-- exportable readiness report or shareable summary
+- AMOC/current-state-informed risk reasoning
+- phased resilience action plans and action briefs
+- exportable readiness report, alert summary, or API-ready output
 
 ## Success metric
 A user can complete intake in under 10 minutes and receive a useful, understandable, prioritized resilience action plan tied to both environmental context and local vulnerability.
 
 ## Demo scenario
-A guesthouse owner in a hurricane-prone Caribbean island enters property details such as roof condition, drainage, openings, backup power, and location exposure.
+A Caribbean operator such as a guesthouse owner, port-adjacent business, or local facility manager enters location and exposure details.
 
-StormShield Caribbean then:
-- pulls relevant ocean and climate context
-- identifies elevated vulnerabilities
-- flags the most important risks
-- produces a phased plan showing what to do now, what to do before the next storm season, and what capital improvements to prioritize later
+AMOC Sentinel then:
+- pulls relevant Atlantic, ocean, and Caribbean environmental context
+- verifies the trusted signal set and confidence level
+- identifies elevated vulnerabilities and threshold risks
+- produces a phased plan showing what to do now, what to do before the next storm season, and what longer-term resilience investments to prioritize
 
 ## Data sources / APIs
 Core sources:
@@ -97,13 +99,13 @@ Optional or later-stage supporting sources:
 - ensuring the system gives decision support, not false precision
 
 ## Why this can become a company
-StormShield Caribbean can evolve into a climate-risk and resilience intelligence platform for Caribbean operators.
+AMOC Sentinel can evolve into a climate-risk and resilience intelligence platform for Caribbean operators.
 
 Possible expansion paths:
-- resilience planning subscriptions for businesses and property owners
-- insurer, lender, or advisor partnerships
-- contractor and service-provider integrations
-- business continuity and infrastructure-readiness modules
-- regional operator alerting and reporting tools
+- premium action briefs, dashboards, and alert subscriptions
+- insurer, lender, advisor, and public-sector partnerships
+- API and data sales for researchers, AI models, and operators
+- sensor bounty or node-network models for trusted local observations
+- x402-enabled per-report, per-alert, or per-query access
 
-The long-term value is not just climate monitoring. The company opportunity is turning environmental complexity into actionable operational decisions.
+The long-term value is not just climate monitoring. The company opportunity is turning environmental complexity into trusted, actionable operational intelligence.
