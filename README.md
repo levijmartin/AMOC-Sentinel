@@ -38,6 +38,7 @@ This repository is set up to help turn an idea into a submission-ready project w
 - `docs/COPERNICUS_INGESTION_PLAN.md` - focused plan for Copernicus Marine MVP ingestion
 - `docs/AMOC_ATLAS_REFERENCE.md` - reference note for AMOC Atlas and its role in the project
 - `docs/RAPID_REFERENCE.md` - reference note for RAPID and its role in the project
+- `docs/X402_REFERENCE.md` - reference note for x402 and its commercialization role
 - `docs/SENSOR_GRID_REVIEW.md` - review of a possible future sensor compression concept
 - `docs/` - place for architecture, pitch, and research notes
 

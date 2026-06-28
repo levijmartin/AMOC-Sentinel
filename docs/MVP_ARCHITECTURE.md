@@ -125,6 +125,21 @@ Recommended non-role for MVP:
 
 In practice, RAPID should feed the signal-analysis layer as a background Atlantic-context input, while Copernicus Marine and Caribbean observational feeds provide more operational ocean and local-condition signals.
 
+## x402 fit in the architecture
+
+x402 should sit above the core risk-intelligence workflow as a commercialization and access-control layer.
+
+Recommended role:
+- gate premium API endpoints
+- support pay-per-report or pay-per-query access
+- enable programmable commercial distribution of risk outputs
+
+Recommended non-role for MVP:
+- not a substitute for climate, ocean, or observational data ingestion
+- not a blocker for building the first user-facing prototype
+
+In practice, the MVP should first generate useful alerts, summaries, and resilience reports. x402 can then be layered on top of those outputs as a machine-payable interface for developers, operators, or premium customers.
+
 ## Suggested MVP stack
 
 ### Front end
