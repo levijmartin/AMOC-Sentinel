@@ -27,5 +27,19 @@ Potential monetization surfaces include:
 - location risk summaries
 - climate-risk API endpoints for developers or partners
 
+## Free-tier and premium model note
+A QuickNode x402 free-tier pattern is a useful commercialization reference for AMOC Sentinel. It supports the idea that the product can offer a public or low-friction free layer while reserving higher-value outputs for metered or paid access.
+
+Possible AMOC Sentinel model:
+- free weekly ocean risk brief
+- limited hazard summaries
+- limited API access
+- premium action briefs
+- higher-frequency alerts
+- simulation runs
+- advanced API outputs for operators, developers, or partners
+
+This is a strong fit for the project because it allows public-interest access and early adoption without abandoning the long-term paid intelligence model.
+
 ## Recommendation
 Preserve x402 in the repo as a commercialization and distribution reference. It is most useful once the core climate-risk intelligence workflow is working and the project is ready to expose paid outputs or premium APIs.
