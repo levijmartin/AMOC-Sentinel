@@ -52,6 +52,7 @@ This repository is set up to help turn an idea into a submission-ready project w
 - `docs/WORKFLOW_ORCHESTRATION_NOTES.md` - pipeline orchestration, QC, and review-flow guidance
 - `docs/MIROFISH_REFERENCE.md` - reference note on reusable patterns from the local MiroFish repo
 - `docs/FUTURE_STATE_ARCHITECTURE.md` - long-term north-star architecture beyond the MVP
+- `docs/FULL_SYSTEM_DIAGRAM.md` - full future-state Mermaid system diagram
 - `docs/SCOPE_BOUNDARY.md` - explicit note on MVP scope vs future-state scope
 - `docs/SENSOR_GRID_REVIEW.md` - review of a possible future sensor compression concept
 - `docs/` - place for architecture, pitch, and research notes
