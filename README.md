@@ -42,6 +42,7 @@ This repository is set up to help turn an idea into a submission-ready project w
 - `DATA_SOURCES.md` - recommended data stack and source strategy
 - `PITCH_PARAGRAPH.md` - buildathon-ready pitch paragraph
 - `docs/MVP_ARCHITECTURE.md` - agentic climate-risk MVP architecture
+- `docs/MVP_SYSTEM_TOPOLOGY.md` - clean MVP Mermaid topology for submissions and demos
 - `docs/COPERNICUS_INGESTION_PLAN.md` - focused plan for Copernicus Marine MVP ingestion
 - `docs/AMOC_ATLAS_REFERENCE.md` - reference note for AMOC Atlas and its role in the project
 - `docs/RAPID_REFERENCE.md` - reference note for RAPID and its role in the project
