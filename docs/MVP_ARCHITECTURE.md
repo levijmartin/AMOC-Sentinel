@@ -163,6 +163,17 @@ Recommended practice:
 - avoid passing giant raw datasets into LLM context windows
 - feed the reasoning layer compact summaries, anomaly flags, and structured signal outputs instead
 
+## Agentic design note
+
+The MVP should be explicitly presented as a multi-agent system, not just a data pipeline. The strongest agentic subset for the first build is:
+- Source Ingestion Agent
+- Provenance and Trust Agent
+- Ocean State Agent
+- Hazard Translation Agent
+- Action Brief Agent
+
+This helps the project read as a real intelligence workflow with role separation, trust handling, and decision outputs.
+
 ## Suggested MVP stack
 
 ### Front end
