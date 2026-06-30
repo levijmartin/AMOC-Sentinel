@@ -55,6 +55,7 @@ This repository is set up to help turn an idea into a submission-ready project w
 - `docs/FULL_SYSTEM_DIAGRAM.md` - full future-state Mermaid system diagram
 - `docs/SCOPE_BOUNDARY.md` - explicit note on MVP scope vs future-state scope
 - `docs/SENSOR_GRID_REVIEW.md` - review of a possible future sensor compression concept
+- `docs/PRELOADED_GEOMETRIC_TOKENIZATION_REVIEW.md` - research note on deterministic tokenized sensor encoding
 - `docs/` - place for architecture, pitch, and research notes
 
 ## Suggested next moves
