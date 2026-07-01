@@ -27,6 +27,8 @@ All four papers share a central idea:
 - repeatedly halve inward under a fixed mechanic
 - represent physical measurements as positions on that structured field
 - use those positions as compact encodings for transmission or interpretation
+- treat the resulting token as both an address and a value within a shared deterministic vocabulary
+- allow counts inside counts, creating a nested tokenization structure rather than a flat encoding scheme
 
 In practical terms, the family of ideas suggests that sensor values might one day be transmitted not as ordinary floating-point payloads, but as structured count-position or token-address packets derived from a shared deterministic coordinate system.
 
@@ -37,12 +39,14 @@ AMOC Sentinel is not just a dashboard concept; it aspires to become a trusted oc
 - data provenance and trust labels
 - low-bandwidth environmental telemetry
 - machine-readable, audit-friendly sensor workflows
+- nested or hierarchical packet structures for progressively deeper sensing detail
 
 These papers are therefore relevant as future research inputs for:
 - compact packetization
 - deterministic telemetry encoding
 - trusted edge-sensor data design
 - optional binary/tokenized sensor representation strategies
+- nested tokenization approaches for multi-layer environmental packets
 
 ## Most relevant papers for practical future use
 Of the set, the most operationally relevant papers for AMOC Sentinel are the low-bandwidth climate and ocean sensing paper and the bit-packet version of the physical measurement grid, because they directly frame the concept as:
