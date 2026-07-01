@@ -17,8 +17,12 @@ This document consolidates several related theoretical papers into one research-
    - frames physical state as a binary count-position on a shared coordinate field
    - emphasizes low-bandwidth sensing and compact telemetry packets for climate/ocean systems
 
+4. **The Physical Measurement Grid as Bit Packets**
+   - emphasizes physical measurement as binary address/packet rather than floating-point payload
+   - highlights compact packet transmission for oceanic, atmospheric, and physical sensor systems
+
 ## Common thread across the papers
-All three papers share a central idea:
+All four papers share a central idea:
 - define one shared geometric basis
 - repeatedly halve inward under a fixed mechanic
 - represent physical measurements as positions on that structured field
@@ -40,13 +44,14 @@ These papers are therefore relevant as future research inputs for:
 - trusted edge-sensor data design
 - optional binary/tokenized sensor representation strategies
 
-## Most relevant paper for practical future use
-Of the three, the low-bandwidth climate and ocean sensing paper is the most operationally relevant for AMOC Sentinel because it directly frames the concept as:
+## Most relevant papers for practical future use
+Of the set, the most operationally relevant papers for AMOC Sentinel are the low-bandwidth climate and ocean sensing paper and the bit-packet version of the physical measurement grid, because they directly frame the concept as:
 - compact telemetry
 - remote buoy and edge-station transmission
 - coordinate packets instead of full floating-point payloads
+- physical state encoded as binary address rather than conventional float payload
 
-That makes it the strongest candidate for future edge or low-power sensing exploration.
+That makes them the strongest candidates for future edge or low-power sensing exploration.
 
 ## What these papers do well
 - offer a consistent conceptual model across measurement, tokenization, and packetization
