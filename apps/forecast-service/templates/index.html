@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{.Title}}</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>AMOC Sentinel Forecast Service</h1>
+    <p class="sub">Simple Go form app for testing weather/risk outputs and x402-style premium access.</p>
+
+    <section class="card">
+      <form method="post" action="/">
+        <label>
+          Location
+          <input type="text" name="location" placeholder="Bridgetown" required />
+        </label>
+
+        <label>
+          Region
+          <input type="text" name="region" placeholder="Barbados" />
+        </label>
+
+        <label>
+          Date
+          <input type="date" name="date" required />
+        </label>
+
+        <button type="submit">Get Forecast</button>
+      </form>
+    </section>
+
+    {{if .Error}}
+    <section class="card error">{{.Error}}</section>
+    {{end}}
+
+    {{if .Forecast}}
+    <section class="card result">
+      <h2>Forecast Result</h2>
+      <ul>
+        <li><strong>Location:</strong> {{.Forecast.Location}}{{if .Forecast.Region}}, {{.Forecast.Region}}{{end}}</li>
+        <li><strong>Date:</strong> {{.Forecast.Date}}</li>
+        <li><strong>Condition:</strong> {{.Forecast.Condition}}</li>
+        <li><strong>Temperature:</strong> {{.Forecast.TemperatureC}}°C</li>
+        <li><strong>Wind:</strong> {{.Forecast.WindKph}} kph</li>
+        <li><strong>Rain Chance:</strong> {{.Forecast.RainChance}}%</li>
+        <li><strong>Marine Heat Risk:</strong> {{.Forecast.MarineHeatRisk}}</li>
+        <li><strong>Coastal Flood Risk:</strong> {{.Forecast.CoastalFloodRisk}}</li>
+        <li><strong>Risk Score:</strong> {{.Forecast.RiskScore}}</li>
+      </ul>
+      <p><strong>Summary:</strong> {{.Forecast.Summary}}</p>
+    </section>
+    {{end}}
+
+    <section class="card api">
+      <h2>API test endpoints</h2>
+      <p>Free endpoint:</p>
+      <code>/api/forecast?location=Bridgetown&region=Barbados&date=2026-07-01</code>
+      <p>Premium x402-style test endpoint:</p>
+      <code>/api/premium/forecast?location=Bridgetown&region=Barbados&date=2026-07-01</code>
+      <p>Add header:</p>
+      <code>X-X402-Payment: test-paid</code>
+    </section>
+  </main>
+</body>
+</html>

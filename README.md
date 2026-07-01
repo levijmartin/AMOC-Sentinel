@@ -57,6 +57,10 @@ This repository is set up to help turn an idea into a submission-ready project w
 - `docs/ADVANCED_TELEMETRY_CONCEPTS.md` - consolidated research note on future telemetry, tokenization, and packetization ideas
 - `docs/` - place for architecture, pitch, and research notes
 
+## Apps
+
+- `apps/forecast-service` - simple Go-based weather/risk form service with free and x402-style premium test endpoints
+
 ## Suggested next moves
 
 1. Pick the track you want to enter.
