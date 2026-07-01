@@ -48,6 +48,8 @@ These papers are therefore relevant as future research inputs for:
 - optional binary/tokenized sensor representation strategies
 - nested tokenization approaches for multi-layer environmental packets
 
+Later variants of the framework also suggest field-and-inner-count packet profiles, where a coarse outer field and finer inner count together represent increasingly detailed physical state in compact structured form.
+
 ## Most relevant papers for practical future use
 Of the set, the most operationally relevant papers for AMOC Sentinel are the low-bandwidth climate and ocean sensing paper and the bit-packet version of the physical measurement grid, because they directly frame the concept as:
 - compact telemetry
