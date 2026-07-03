@@ -1,4 +1,5 @@
-# FutureCaribbean1
+# AMOC-Sentinel
+
 
 Starter workspace for the Future Caribbean Agentic AI Buildathon.
 
