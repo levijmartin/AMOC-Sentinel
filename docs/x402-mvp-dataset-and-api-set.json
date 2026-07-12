@@ -1,0 +1,223 @@
+{
+  "format": "x402",
+  "version": "0.3",
+  "title": "MVP Dataset and API Set on the Measurement Coordinate System",
+  "subtitle": "Each Source Read as a Count of the One Unit",
+  "organization": "Future Caribbean AI Collaboration Team",
+  "date": "2026-07",
+  "document_type": "structured-extraction",
+  "overview": {
+    "introductory_note": "This paper lists the ten data sources and rails of the collaboration MVP and gives the reading each takes on the coordinate. There is one axiom (1), one closure (the count of 5), and one mechanic: every measured quantity is a count against a base. Sources 1–8 are read on the count; sources 9 and 10 are not overlays — they are the transport and the paid access rail that carry the packets. The coordinate system is preloaded; data mapping is external. Every base is either machined from the count or declared as explicit external configuration; nothing is fitted. Electrical quantities follow the same seated rules, with voltage explicitly seated at count 3 and current, resistance, and power constructed from the master table and inversion wave.",
+    "core_principles": [
+      "One axiom: 1",
+      "One closure: count 5",
+      "One mechanic: every measured quantity is a count against a base",
+      "Sources 1–8 are read on the count",
+      "Sources 9 and 10 are transport and paid access rails, not overlays",
+      "The coordinate system is preloaded; data mapping is external",
+      "Bases are either machined from the count or declared as explicit external configuration",
+      "Nothing is fitted"
+    ]
+  },
+  "one_mechanic_walkthrough": {
+    "axiom": "There is exactly one physical unit.",
+    "master_halving_mechanic": "sqrt(2)",
+    "count_definition": "The count c records completed rational–irrational pairs of halving.",
+    "depth_definition": "The depth d records every individual halving step.",
+    "active_counts": "c = 1 to 5",
+    "active_depths": "d = 1 to 9",
+    "closure_points": {
+      "rational_square": {
+        "depth": 8,
+        "value": 512
+      },
+      "true_sphere": {
+        "depth": 9,
+        "value": "512*sqrt(2) ≈ 724.077"
+      },
+      "machined_angular_reference": {
+        "value": 720,
+        "formula": "5 × 9 × 16"
+      }
+    },
+    "general_reading_rules": {
+      "floor_base": "count = log2(quantity / base)",
+      "seated_base": "count = c_base - log2(quantity / base)"
+    },
+    "packetization": {
+      "field": "The integer part of the count; envelope and alarm level.",
+      "inner_node": "The decimal part multiplied by 32 and rounded; 5 bits.",
+      "signed_quantities": "A leading dual bit encodes sign.",
+      "zero": "Zero is the loaded center itself, carried exactly.",
+      "packet_shape": "field bits followed by 5 node bits"
+    },
+    "progressive_truncation": "Every prefix of the bit string is a valid coarser reading of the same physical state.",
+    "alarm_semantics": "A field transition is a bit-pattern change in the leading field bits.",
+    "cross_check_rules": {
+      "limb_against_limb": "Opposed limbs of one transfer must have identical magnitude count with the dual bit flipped.",
+      "source_against_source": "Two independent readings of the same physical quantity must sit at the same count position. Residuals appear as small bit differences."
+    },
+    "base_seating": {
+      "machined_from_count": [
+        "thermal floor 264*sqrt(2)/137 ≈ 2.7252 K",
+        "weight of one transfer = 1 Sv"
+      ],
+      "declared_external_configuration": "1 unit of the quantity's own track",
+      "rule": "Measured standard values appear only in checking columns for residual computation; they never substitute into a count formula."
+    },
+    "inversion_wave": {
+      "description": "The five active counts form a self-reflecting inversion wave folding at count 3.",
+      "alpha_count_cycle": [0, 1, 2, 1, 0],
+      "center": "Count 3 is the absolute center.",
+      "energy_base_note": "The structural midpoint weight 256*alpha_count^2 on the count-5 keV scale seats the energy base and therefore the voltage base."
+    }
+  },
+  "electrical_quantities": {
+    "summary": "Voltage, current, resistance, and power use the same count mechanic, packet format, field-as-alarm rule, dual-bit handling, progressive truncation, and bit-comparison cross-checks as thermal and gas quantities.",
+    "voltage": {
+      "track": "square",
+      "seated_at": "count 3",
+      "base": {
+        "value": 13.6325,
+        "unit": "V"
+      },
+      "reading_rule": "count = 3 - log2(V_meas / 13.6325)",
+      "field_meaning": "Field 3 is the center envelope around 13.6325 V. Field 2 lies above it; fields 4 and higher lie below it.",
+      "examples": [
+        {
+          "state": "Typical 12 V rail",
+          "voltage_v": 12.0,
+          "count": 3.184,
+          "field": 3,
+          "node": 6,
+          "packet": "011.00110"
+        },
+        {
+          "state": "Typical 5 V rail",
+          "voltage_v": 5.0,
+          "count": 4.447,
+          "field": 4,
+          "node": 14,
+          "packet": "100.01110"
+        },
+        {
+          "state": "Typical 3.3 V rail",
+          "voltage_v": 3.3,
+          "count": 5.047,
+          "field": 5,
+          "node": 1,
+          "packet": "101.00001"
+        },
+        {
+          "state": "Typical 1.8 V rail",
+          "voltage_v": 1.8,
+          "count": 5.921,
+          "field": 5,
+          "node": 29,
+          "packet": "101.11101"
+        },
+        {
+          "state": "GPU core (example)",
+          "voltage_v": 1.0,
+          "count": 6.769,
+          "field": 6,
+          "node": 25,
+          "packet": "110.11001"
+        },
+        {
+          "state": "Lower core / sensor",
+          "voltage_v": 0.8,
+          "count": 7.091,
+          "field": 7,
+          "node": 3,
+          "packet": "111.00011"
+        }
+      ]
+    },
+    "current": {
+      "track": "angular",
+      "seated_at": "count 0",
+      "description": "Current is the rate of charge flow and operates on the angular track. A natural count-current base is constructed internally from the 512 keV electron scale, angular frequency from 720 or depth-9 closure, alpha_count, and the master-table readings at counts 2/4 that produce the integer body 137.",
+      "reading_rule": "count = c0 - log2(I_meas / I_base)"
+    },
+    "resistance": {
+      "track": "mixed",
+      "description": "Resistance is the ratio R = V / I and is coupled through 720/512 = 1.40625 or sqrt(2). Once seated from the master table, measured resistance or conductivity uses the identical log-to-count formula and packet format.",
+      "reading_rule": "uses the same log-to-count formula after base seating from the master table"
+    },
+    "power": {
+      "track": "mixed",
+      "description": "Power is the rate of energy transfer and operates at the flow layers of the inversion wave or directly as the product of the count-3 voltage base and the angular current base.",
+      "reading_rule": "count = c_flow - log2(P_meas / P_base)"
+    }
+  },
+  "sources": [
+    {
+      "id": 1,
+      "name": "Copernicus Marine Toolbox",
+      "provides": [
+        "temperature",
+        "salinity",
+        "currents",
+        "sea level"
+      ],
+      "link": "https://toolbox-docs.marine.copernicus.eu/",
+      "temperature": {
+        "reading_rule": "count = log2(T / 2.7251999 K)",
+        "field": 6,
+        "packet_bits": 8,
+        "examples": [
+          {
+            "state": "Ocean minimum (-2°C)",
+            "temperature_k": 271.15,
+            "count": 6.637,
+            "field": 6,
+            "node": 20,
+            "packet": "110.10100"
+          },
+          {
+            "state": "Ocean maximum (30°C)",
+            "temperature_k": 303.15,
+            "count": 6.798,
+            "field": 6,
+            "node": 26,
+            "packet": "110.11010"
+          }
+        ]
+      },
+      "salinity": {
+        "via": "conductivity",
+        "status": "seated path available through electrical quantities rules"
+      },
+      "currents": {
+        "status": "ocean current velocity awaits specific base declaration from the master table"
+      }
+    },
+    {
+      "id": 9,
+      "name": "OpenTelemetry Collector",
+      "role": "transport rail",
+      "description": "Carries coordinate packets as metric attributes; the collector endpoint holds the coordinate map by mathematics."
+    },
+    {
+      "id": 10,
+      "name": "x402",
+      "role": "paid access rail",
+      "description": "Sells access to the packets using the progressive bitstream natively; field identity can be free and deeper refinement bits can be paid."
+    }
+  ],
+  "mvp_status": {
+    "state": "partial extraction from supplied text",
+    "covered_sections": [
+      "Introductory note",
+      "The One Mechanic — Complete Walkthrough",
+      "Electrical Quantities on the Coordinate — Complete Walkthrough",
+      "Source 1 — Copernicus Marine Toolbox",
+      "Transport and access rails summary from prior stage documents"
+    ],
+    "not_yet_extracted": [
+      "Remaining source sections not present in the provided excerpt",
+      "Any tables or appendices beyond Source 1 in the uploaded text"
+    ]
+  }
+}
