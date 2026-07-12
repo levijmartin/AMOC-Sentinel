@@ -14,18 +14,20 @@ import (
 )
 
 type Forecast struct {
-	Location         string  `json:"location"`
-	Region           string  `json:"region"`
-	Date             string  `json:"date"`
-	Condition        string  `json:"condition"`
-	TemperatureC     int     `json:"temperatureC"`
-	WindKph          int     `json:"windKph"`
-	RainChance       int     `json:"rainChance"`
-	MarineHeatRisk   string  `json:"marineHeatRisk"`
-	CoastalFloodRisk string  `json:"coastalFloodRisk"`
-	RiskScore        float64 `json:"riskScore"`
-	Summary          string  `json:"summary"`
-	PremiumAdvisory  string  `json:"premiumAdvisory,omitempty"`
+	Location             string                 `json:"location"`
+	Region               string                 `json:"region"`
+	Date                 string                 `json:"date"`
+	Condition            string                 `json:"condition"`
+	TemperatureC         int                    `json:"temperatureC"`
+	WindKph              int                    `json:"windKph"`
+	RainChance           int                    `json:"rainChance"`
+	MarineHeatRisk       string                 `json:"marineHeatRisk"`
+	CoastalFloodRisk     string                 `json:"coastalFloodRisk"`
+	RiskScore            float64                `json:"riskScore"`
+	Summary              string                 `json:"summary"`
+	PremiumAdvisory      string                 `json:"premiumAdvisory,omitempty"`
+	RememberedContext    *OperatorContextMemory `json:"rememberedContext,omitempty"`
+	MemoryImplementation string                 `json:"memoryImplementation,omitempty"`
 }
 
 type PageData struct {
@@ -34,13 +36,17 @@ type PageData struct {
 	Error    string
 }
 
-var tmpl = template.Must(template.ParseFiles("templates/index.html"))
+var (
+	tmpl                    = template.Must(template.ParseFiles("templates/index.html"))
+	memoryStore MemoryStore = NewInMemoryStore()
+)
 
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handleIndex)
 	mux.HandleFunc("/api/forecast", handleForecastAPI)
 	mux.HandleFunc("/api/premium/forecast", handlePremiumForecastAPI)
+	mux.HandleFunc("/api/memory/operator", handleOperatorMemoryAPI)
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	port := os.Getenv("PORT")
@@ -49,6 +55,7 @@ func main() {
 	}
 
 	log.Printf("AMOC Sentinel forecast service listening on :%s", port)
+	log.Printf("Memory interface enabled with placeholder implementation: %T", memoryStore)
 	if err := http.ListenAndServe(":"+port, logRequest(mux)); err != nil {
 		log.Fatal(err)
 	}
@@ -74,6 +81,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	forecast := generateForecast(location, region, date, false)
+	hydrateForecastMemory(r, &forecast)
 	renderPage(w, PageData{Title: "AMOC Sentinel Forecast Service", Forecast: &forecast})
 }
 
@@ -88,6 +96,7 @@ func handleForecastAPI(w http.ResponseWriter, r *http.Request) {
 	}
 
 	forecast := generateForecast(location, region, date, false)
+	hydrateForecastMemory(r, &forecast)
 	writeJSON(w, forecast)
 }
 
@@ -112,7 +121,55 @@ func handlePremiumForecastAPI(w http.ResponseWriter, r *http.Request) {
 	}
 
 	forecast := generateForecast(location, region, date, true)
+	hydrateForecastMemory(r, &forecast)
 	writeJSON(w, forecast)
+}
+
+func handleOperatorMemoryAPI(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		location := strings.TrimSpace(r.URL.Query().Get("location"))
+		region := strings.TrimSpace(r.URL.Query().Get("region"))
+		if location == "" {
+			http.Error(w, `{"error":"location is required"}`, http.StatusBadRequest)
+			return
+		}
+
+		mem, err := memoryStore.GetOperatorContext(r.Context(), memoryKey(location, region))
+		if err != nil {
+			http.Error(w, `{"error":"could not load memory"}`, http.StatusInternalServerError)
+			return
+		}
+		if mem == nil {
+			writeJSON(w, map[string]any{"memory": nil, "implementation": fmt.Sprintf("%T", memoryStore)})
+			return
+		}
+		writeJSON(w, map[string]any{"memory": mem, "implementation": fmt.Sprintf("%T", memoryStore)})
+	case http.MethodPost:
+		var payload OperatorContextMemory
+		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+			http.Error(w, `{"error":"invalid JSON body"}`, http.StatusBadRequest)
+			return
+		}
+		payload.Location = strings.TrimSpace(payload.Location)
+		payload.Region = strings.TrimSpace(payload.Region)
+		if payload.Key == "" {
+			payload.Key = memoryKey(payload.Location, payload.Region)
+		}
+		if payload.Key == "" {
+			http.Error(w, `{"error":"location or key is required"}`, http.StatusBadRequest)
+			return
+		}
+		if err := memoryStore.UpsertOperatorContext(r.Context(), payload); err != nil {
+			http.Error(w, `{"error":"could not save memory"}`, http.StatusInternalServerError)
+			return
+		}
+		mem, _ := memoryStore.GetOperatorContext(r.Context(), payload.Key)
+		writeJSON(w, map[string]any{"memory": mem, "implementation": fmt.Sprintf("%T", memoryStore)})
+	default:
+		w.Header().Set("Allow", "GET, POST")
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+	}
 }
 
 func generateForecast(location, region, date string, premium bool) Forecast {
@@ -160,6 +217,32 @@ func generateForecast(location, region, date string, premium bool) Forecast {
 	}
 
 	return forecast
+}
+
+func hydrateForecastMemory(r *http.Request, forecast *Forecast) {
+	key := memoryKey(forecast.Location, forecast.Region)
+	forecast.MemoryImplementation = fmt.Sprintf("%T", memoryStore)
+
+	if mem, err := memoryStore.GetOperatorContext(r.Context(), key); err == nil && mem != nil {
+		forecast.RememberedContext = mem
+	}
+
+	summary := ForecastMemorySummary{
+		Location: forecast.Location,
+		Region:   forecast.Region,
+		Date:     forecast.Date,
+		Summary:  forecast.Summary,
+	}
+	if err := memoryStore.RecordForecastSummary(r.Context(), key, summary); err != nil {
+		log.Printf("memory record failed for %s: %v", key, err)
+		return
+	}
+
+	if forecast.RememberedContext == nil {
+		if mem, err := memoryStore.GetOperatorContext(r.Context(), key); err == nil && mem != nil {
+			forecast.RememberedContext = mem
+		}
+	}
 }
 
 func premiumAdvice(f Forecast) string {
