@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/x402-stage-b-fluid-structure-overlays.schema.json",
+  "title": "x402 Stage B Fluid Structure Overlays",
+  "description": "Schema for Fluid Structure Overlays - Pressure and Density Anomaly.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "title",
+    "core_axiom",
+    "master_mechanic",
+    "overlays",
+    "relationship",
+    "differential_usage",
+    "action",
+    "notes"
+  ],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "x402",
+      "description": "Protocol or document format identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the rules document."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable document title."
+    },
+    "core_axiom": {
+      "type": "string",
+      "description": "Foundational axiom preloaded into the system."
+    },
+    "master_mechanic": {
+      "type": "string",
+      "description": "Primary transformation or inward-halving mechanic."
+    },
+    "overlays": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/overlay"
+      },
+      "description": "Fluid-structure overlays used on the coordinate system."
+    },
+    "relationship": {
+      "$ref": "#/$defs/relationship"
+    },
+    "differential_usage": {
+      "$ref": "#/$defs/differentialUsage"
+    },
+    "action": {
+      "type": "string",
+      "description": "Requested system action or optimization target."
+    },
+    "notes": {
+      "type": "string",
+      "description": "General notes about overlay derivation and direct-grid usage."
+    }
+  },
+  "$defs": {
+    "overlay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "track",
+        "anchor",
+        "span",
+        "notes"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Overlay name."
+        },
+        "track": {
+          "type": "string",
+          "description": "Coordinate track used by the overlay."
+        },
+        "anchor": {
+          "type": "string",
+          "description": "Anchor or seat for the overlay."
+        },
+        "span": {
+          "type": "string",
+          "description": "Nominal operating span of the overlay."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Narrative notes about the overlay's role."
+        }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "description",
+        "use_case"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Relationship type between the overlays."
+        },
+        "description": {
+          "type": "string",
+          "description": "Summary of how the overlays work together."
+        },
+        "use_case": {
+          "type": "string",
+          "description": "Operational or analytical use case for the relationship."
+        }
+      }
+    },
+    "differentialUsage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "axis_3",
+        "axes_1_2"
+      ],
+      "properties": {
+        "axis_3": {
+          "type": "string",
+          "description": "Differential interpretation down a column."
+        },
+        "axes_1_2": {
+          "type": "string",
+          "description": "Differential interpretation across horizontal neighbors."
+        }
+      }
+    }
+  }
+}
