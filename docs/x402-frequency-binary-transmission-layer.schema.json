@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/x402-frequency-binary-transmission-layer.schema.json",
+  "title": "x402 Frequency as the Binary Transmission Layer",
+  "description": "Schema for Frequency as the Binary Transmission Layer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "title",
+    "core_axiom",
+    "master_mechanic",
+    "frequency_mapping",
+    "count_as_bitstream",
+    "three_faces",
+    "progressive_bitstream",
+    "transmission_layer",
+    "action",
+    "notes"
+  ],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "x402",
+      "description": "Protocol or document format identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the rules document."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable document title."
+    },
+    "core_axiom": {
+      "type": "string",
+      "description": "Foundational axiom preloaded into the system."
+    },
+    "master_mechanic": {
+      "type": "string",
+      "description": "Primary transformation or operating mechanic."
+    },
+    "frequency_mapping": {
+      "$ref": "#/$defs/frequencyMapping"
+    },
+    "count_as_bitstream": {
+      "$ref": "#/$defs/countAsBitstream"
+    },
+    "three_faces": {
+      "$ref": "#/$defs/threeFaces"
+    },
+    "progressive_bitstream": {
+      "$ref": "#/$defs/progressiveBitstream"
+    },
+    "transmission_layer": {
+      "$ref": "#/$defs/transmissionLayer"
+    },
+    "action": {
+      "type": "string",
+      "description": "Requested system action or optimization target."
+    },
+    "notes": {
+      "type": "string",
+      "description": "General notes about indefinite depth and transmission behavior."
+    }
+  },
+  "$defs": {
+    "frequencyMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "formula",
+        "meaning"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Narrative definition of frequency as the transmission layer."
+        },
+        "formula": {
+          "type": "string",
+          "description": "Formula relating angular partition and frequency/count."
+        },
+        "meaning": {
+          "type": "string",
+          "description": "Operational meaning of the mapping."
+        }
+      }
+    },
+    "countAsBitstream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "table"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Narrative explanation of count as binary writing."
+        },
+        "table": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/bitstreamRow"
+          },
+          "description": "Count-to-domain and binary progression table."
+        }
+      }
+    },
+    "bitstreamRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "c",
+        "domains",
+        "angular_piece",
+        "binary",
+        "bits"
+      ],
+      "properties": {
+        "c": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Count index."
+        },
+        "domains": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of domains at the given count."
+        },
+        "angular_piece": {
+          "type": "string",
+          "description": "Angular span per domain at the given count."
+        },
+        "binary": {
+          "type": "string",
+          "description": "Binary representation associated with the count."
+        },
+        "bits": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Bit length associated with the step."
+        }
+      }
+    },
+    "threeFaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "sphere",
+        "angular",
+        "square",
+        "invariant_gear"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Summary of the jointly halved sphere/angular/square faces."
+        },
+        "sphere": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" }
+          ],
+          "description": "Sphere-face reference value."
+        },
+        "angular": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" }
+          ],
+          "description": "Angular-face reference value."
+        },
+        "square": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" }
+          ],
+          "description": "Square-face reference value."
+        },
+        "invariant_gear": {
+          "type": "string",
+          "description": "Invariant ratio or coupling note preserved across counts."
+        }
+      }
+    },
+    "progressiveBitstream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "packet_structure"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Summary of progressive packet behavior."
+        },
+        "packet_structure": {
+          "$ref": "#/$defs/packetStructure"
+        }
+      }
+    },
+    "packetStructure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field_bits",
+        "depth_bits",
+        "truncation"
+      ],
+      "properties": {
+        "field_bits": {
+          "type": "string",
+          "description": "Role of the field/envelope bits."
+        },
+        "depth_bits": {
+          "type": "string",
+          "description": "Role of the inner/depth bits."
+        },
+        "truncation": {
+          "type": "string",
+          "description": "Truncation rule and preservation property."
+        }
+      }
+    },
+    "transmissionLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "key_point"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "description": "Role of frequency/count/axiom in transmission."
+        },
+        "key_point": {
+          "type": "string",
+          "description": "Core implementation takeaway for transmission and reconstruction."
+        }
+      }
+    }
+  }
+}
