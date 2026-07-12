@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/x402-stage-2-electrical-quantities.schema.json",
+  "title": "x402 Stage 2 Electrical Quantities",
+  "description": "Schema for Electrical Quantities - Voltage, Current, Resistance, Power.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "title",
+    "core_axiom",
+    "master_mechanic",
+    "voltage",
+    "current",
+    "resistance",
+    "power",
+    "common_properties",
+    "action",
+    "notes"
+  ],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "x402",
+      "description": "Protocol or document format identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the rules document."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable document title."
+    },
+    "core_axiom": {
+      "type": "string",
+      "description": "Foundational axiom preloaded into the system."
+    },
+    "master_mechanic": {
+      "type": "string",
+      "description": "Primary transformation or operating mechanic."
+    },
+    "voltage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "track",
+        "seated_at",
+        "base",
+        "unit",
+        "reading_rule",
+        "field_meaning"
+      ],
+      "properties": {
+        "track": {
+          "type": "string",
+          "description": "Track family used for voltage."
+        },
+        "seated_at": {
+          "type": "string",
+          "description": "Seated count or center definition for the voltage base."
+        },
+        "base": {
+          "type": "number",
+          "description": "Reference base value for voltage."
+        },
+        "unit": {
+          "type": "string",
+          "const": "V",
+          "description": "Engineering unit for voltage."
+        },
+        "reading_rule": {
+          "type": "string",
+          "description": "Formula used to map measured voltage to count space."
+        },
+        "field_meaning": {
+          "type": "string",
+          "description": "Interpretation of fields for voltage envelopes."
+        }
+      }
+    },
+    "current": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "track",
+        "seated_at",
+        "description",
+        "reading_rule"
+      ],
+      "properties": {
+        "track": {
+          "type": "string",
+          "description": "Track family used for current."
+        },
+        "seated_at": {
+          "type": "string",
+          "description": "Seated count or center definition for current."
+        },
+        "description": {
+          "type": "string",
+          "description": "Narrative definition of current and how its base is constructed."
+        },
+        "reading_rule": {
+          "type": "string",
+          "description": "Formula used to map measured current to count space."
+        }
+      }
+    },
+    "resistance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "track",
+        "description",
+        "reading_rule"
+      ],
+      "properties": {
+        "track": {
+          "type": "string",
+          "description": "Track family used for resistance."
+        },
+        "description": {
+          "type": "string",
+          "description": "Narrative definition of resistance and its coupling relationships."
+        },
+        "reading_rule": {
+          "type": "string",
+          "description": "Formula used after seating the resistance base from the master table."
+        }
+      }
+    },
+    "power": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "track",
+        "description",
+        "reading_rule"
+      ],
+      "properties": {
+        "track": {
+          "type": "string",
+          "description": "Track family used for power."
+        },
+        "description": {
+          "type": "string",
+          "description": "Narrative definition of power and its seated flow layers or base construction."
+        },
+        "reading_rule": {
+          "type": "string",
+          "description": "Formula used to map measured power to count space."
+        }
+      }
+    },
+    "common_properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packet_format",
+        "progressive_truncation",
+        "alarm_by_field_transition",
+        "cross_check"
+      ],
+      "properties": {
+        "packet_format": {
+          "type": "string",
+          "description": "Shared packet structure used across electrical quantities."
+        },
+        "progressive_truncation": {
+          "type": "boolean",
+          "description": "Whether progressive truncation is supported."
+        },
+        "alarm_by_field_transition": {
+          "type": "boolean",
+          "description": "Whether alarms are detected by field transitions."
+        },
+        "cross_check": {
+          "type": "string",
+          "description": "How cross-checking is performed across readings."
+        }
+      }
+    },
+    "action": {
+      "type": "string",
+      "description": "Requested system action or optimization target."
+    },
+    "notes": {
+      "type": "string",
+      "description": "General notes about applicability, inheritance, and base construction."
+    }
+  }
+}
