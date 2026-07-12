@@ -1,0 +1,276 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/x402-stage-a-core-mechanics.schema.json",
+  "title": "x402 Stage A Core Mechanics",
+  "description": "Schema for Core Mechanics - Axiom, Master Table, Lattice & Differentials.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "title",
+    "core_axiom",
+    "master_mechanic",
+    "master_table",
+    "master_log_table",
+    "recursive_layering",
+    "shared_4d_lattice",
+    "differential_modes",
+    "packet_architecture",
+    "action",
+    "notes"
+  ],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "x402",
+      "description": "Protocol or document format identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the rules document."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable document title."
+    },
+    "core_axiom": {
+      "type": "string",
+      "description": "Foundational axiom preloaded into the system."
+    },
+    "master_mechanic": {
+      "type": "string",
+      "description": "Primary transformation or inward-halving mechanic."
+    },
+    "master_table": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/masterTableRow"
+      },
+      "description": "Primary count/depth master table."
+    },
+    "master_log_table": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/masterLogRow"
+      },
+      "description": "Master-count to depth-log mapping table."
+    },
+    "recursive_layering": {
+      "$ref": "#/$defs/recursiveLayering"
+    },
+    "shared_4d_lattice": {
+      "$ref": "#/$defs/shared4DLattice"
+    },
+    "differential_modes": {
+      "$ref": "#/$defs/differentialModes"
+    },
+    "packet_architecture": {
+      "$ref": "#/$defs/packetArchitecture"
+    },
+    "action": {
+      "type": "string",
+      "description": "Requested system action or optimization target."
+    },
+    "notes": {
+      "type": "string",
+      "description": "General notes about scope and external anchoring."
+    }
+  },
+  "$defs": {
+    "masterTableRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "c",
+        "d",
+        "mechanic",
+        "mdq",
+        "reading",
+        "parity"
+      ],
+      "properties": {
+        "c": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Master count index."
+        },
+        "d": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Depth index."
+        },
+        "mechanic": {
+          "type": "string",
+          "description": "Mechanic expression for the row."
+        },
+        "mdq": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Mechanical Domain Quantity."
+        },
+        "reading": {
+          "oneOf": [
+            { "type": "number" },
+            { "type": "string" }
+          ],
+          "description": "Reading value or symbolic reading for the row."
+        },
+        "parity": {
+          "type": "string",
+          "enum": ["even", "odd"],
+          "description": "Parity of the row."
+        }
+      }
+    },
+    "masterLogRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "master_count",
+        "master_log",
+        "depth_logs"
+      ],
+      "properties": {
+        "master_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Master count associated with the log row."
+        },
+        "master_log": {
+          "type": "string",
+          "description": "Named master log for the count."
+        },
+        "depth_logs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Depth-level logs associated with the master count."
+        }
+      }
+    },
+    "recursiveLayering": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "positions_per_octave",
+        "payload_bits_per_octave"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Summary of recursive 0-5 octave layering behavior."
+        },
+        "positions_per_octave": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Resolution multiplier or positions per octave."
+        },
+        "payload_bits_per_octave": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Payload bits added per octave."
+        }
+      }
+    },
+    "shared4DLattice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "axis_1",
+        "axis_2",
+        "axis_3",
+        "axis_4",
+        "count_activation"
+      ],
+      "properties": {
+        "axis_1": {
+          "type": "string",
+          "description": "First axis label."
+        },
+        "axis_2": {
+          "type": "string",
+          "description": "Second axis label."
+        },
+        "axis_3": {
+          "type": "string",
+          "description": "Third axis label."
+        },
+        "axis_4": {
+          "type": "string",
+          "description": "Fourth axis label."
+        },
+        "count_activation": {
+          "type": "string",
+          "description": "Explanation of how counts activate the mechanic and axes."
+        }
+      }
+    },
+    "differentialModes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "axis_4",
+        "axes_1_3",
+        "cross_overlay"
+      ],
+      "properties": {
+        "axis_4": {
+          "type": "string",
+          "description": "Differential mode for axis 4."
+        },
+        "axes_1_3": {
+          "type": "string",
+          "description": "Differential mode for axes 1 through 3."
+        },
+        "cross_overlay": {
+          "type": "string",
+          "description": "Cross-overlay consistency check rule."
+        }
+      }
+    },
+    "packetArchitecture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "quantity_id",
+        "mode_bit",
+        "field_bits",
+        "payload",
+        "sequence",
+        "crc"
+      ],
+      "properties": {
+        "quantity_id": {
+          "type": "string",
+          "description": "Bit allocation or role for the quantity identifier."
+        },
+        "mode_bit": {
+          "type": "string",
+          "description": "Bit allocation or role for full-position vs differential mode."
+        },
+        "field_bits": {
+          "type": "string",
+          "description": "Bit allocation for the field/envelope."
+        },
+        "payload": {
+          "type": "string",
+          "description": "Bit allocation for payload data."
+        },
+        "sequence": {
+          "type": "string",
+          "description": "Bit allocation for sequence numbering."
+        },
+        "crc": {
+          "type": "string",
+          "description": "Bit allocation for CRC or checksum."
+        }
+      }
+    }
+  }
+}
