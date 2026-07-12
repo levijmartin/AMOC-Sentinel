@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/x402-stage-3-data-sources-1-5-mapping.schema.json",
+  "title": "x402 Stage 3 Data Sources 1-5 Mapping",
+  "description": "Schema for Data Sources 1-5 Mapping.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "title",
+    "core_axiom",
+    "master_mechanic",
+    "sources",
+    "action",
+    "notes"
+  ],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "x402",
+      "description": "Protocol or document format identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the rules document."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable document title."
+    },
+    "core_axiom": {
+      "type": "string",
+      "description": "Foundational axiom preloaded into the system."
+    },
+    "master_mechanic": {
+      "type": "string",
+      "description": "Primary transformation or operating mechanic."
+    },
+    "sources": {
+      "type": "array",
+      "description": "Mapped external data sources and their x402 quantity encodings.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "action": {
+      "type": "string",
+      "description": "Requested system action or optimization target."
+    },
+    "notes": {
+      "type": "string",
+      "description": "General notes about shared rules and Stage 2 inheritance."
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "provides"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Numeric source identifier."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable source name."
+        },
+        "provides": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "List of quantities or observations provided by the source."
+        },
+        "temperature": {
+          "$ref": "#/$defs/temperatureMapping"
+        },
+        "salinity": {
+          "$ref": "#/$defs/statusMapping"
+        },
+        "pressure": {
+          "$ref": "#/$defs/pressureMapping"
+        },
+        "voltage_current": {
+          "$ref": "#/$defs/statusMapping"
+        },
+        "base": {
+          "type": "string",
+          "description": "Declared or ruled base for source-wide quantity mapping."
+        },
+        "dual_limb": {
+          "type": "boolean",
+          "description": "Whether the source quantity uses dual-limb encoding."
+        },
+        "packet_bits": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Nominal packet width for the source or mapped quantity."
+        },
+        "field_meaning": {
+          "type": "string",
+          "description": "Explanation of field semantics for the source."
+        },
+        "cross_check_with_source_2": {
+          "type": "string",
+          "description": "Cross-check rule relative to source 2."
+        }
+      }
+    },
+    "temperatureMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "base": {
+          "type": "string",
+          "description": "Thermal base or floor used for temperature mapping."
+        },
+        "field": {
+          "type": "integer",
+          "description": "Field index associated with the mapped quantity."
+        },
+        "reading_rule": {
+          "type": "string",
+          "description": "Formula used to map temperature into count space."
+        },
+        "packet_bits": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Nominal packet width for temperature packets."
+        },
+        "examples": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/temperatureExample"
+          },
+          "description": "Optional example states for temperature encodings."
+        }
+      }
+    },
+    "pressureMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "base",
+        "packet_bits"
+      ],
+      "properties": {
+        "base": {
+          "type": "string",
+          "description": "Declared or derived base used for pressure mapping."
+        },
+        "field": {
+          "type": "integer",
+          "description": "Field index associated with the mapped pressure quantity."
+        },
+        "example": {
+          "type": "string",
+          "description": "Illustrative pressure packet example."
+        },
+        "packet_bits": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Nominal packet width for pressure packets."
+        }
+      }
+    },
+    "statusMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "via": {
+          "type": "string",
+          "description": "Intermediate measured quantity used for the mapping."
+        },
+        "status": {
+          "type": "string",
+          "description": "Readiness or implementation status note."
+        }
+      }
+    },
+    "temperatureExample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "field",
+        "node"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "description": "Named environmental or operational state."
+        },
+        "field": {
+          "type": "integer",
+          "description": "Field index for the example state."
+        },
+        "node": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Inner node index for the example state."
+        }
+      }
+    }
+  }
+}
