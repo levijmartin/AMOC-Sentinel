@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/x402-stage-4-hardware-telemetry-sources.schema.json",
+  "title": "x402 Stage 4 Hardware Telemetry Sources",
+  "description": "Schema for Hardware Telemetry Sources (General Processors, Sensors, Timers).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "title",
+    "core_axiom",
+    "master_mechanic",
+    "scope",
+    "sources",
+    "action",
+    "notes"
+  ],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "x402",
+      "description": "Protocol or document format identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the rules document."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable document title."
+    },
+    "core_axiom": {
+      "type": "string",
+      "description": "Foundational axiom preloaded into the system."
+    },
+    "master_mechanic": {
+      "type": "string",
+      "description": "Primary transformation or operating mechanic."
+    },
+    "scope": {
+      "type": "string",
+      "description": "Scope statement describing the hardware telemetry domain covered by the rules."
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Category-based hardware and infrastructure telemetry mappings.",
+      "items": {
+        "$ref": "#/$defs/sourceCategory"
+      }
+    },
+    "action": {
+      "type": "string",
+      "description": "Requested system action or optimization target."
+    },
+    "notes": {
+      "type": "string",
+      "description": "General notes about shared telemetry rules and cross-domain applicability."
+    }
+  },
+  "$defs": {
+    "sourceCategory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category"
+      ],
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Telemetry source category name."
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Representative example sources or signals in the category."
+        },
+        "description": {
+          "type": "string",
+          "description": "Narrative description of the category."
+        },
+        "load": {
+          "$ref": "#/$defs/declaredQuantity"
+        },
+        "price": {
+          "$ref": "#/$defs/signedDeclaredQuantity"
+        },
+        "temperature": {
+          "$ref": "#/$defs/temperatureTelemetry"
+        },
+        "voltage": {
+          "$ref": "#/$defs/voltageTelemetry"
+        },
+        "power": {
+          "$ref": "#/$defs/powerTelemetry"
+        },
+        "current_and_resistance": {
+          "$ref": "#/$defs/statusNote"
+        }
+      }
+    },
+    "declaredQuantity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "base",
+        "packet_bits"
+      ],
+      "properties": {
+        "quantity": {
+          "type": "string",
+          "description": "Type of quantity being represented."
+        },
+        "base": {
+          "type": "string",
+          "description": "Declared base used for mapping."
+        },
+        "packet_bits": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Nominal packet width for the quantity."
+        }
+      }
+    },
+    "signedDeclaredQuantity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "base",
+        "signed",
+        "dual_bit",
+        "packet_bits"
+      ],
+      "properties": {
+        "base": {
+          "type": "string",
+          "description": "Declared base used for mapping."
+        },
+        "signed": {
+          "type": "boolean",
+          "description": "Whether the quantity is signed."
+        },
+        "dual_bit": {
+          "type": "boolean",
+          "description": "Whether a dual bit is used for sign separation."
+        },
+        "packet_bits": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Nominal packet width for the quantity."
+        }
+      }
+    },
+    "temperatureTelemetry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "base",
+        "alarm_by_field_transition",
+        "example_threshold",
+        "packet_bits"
+      ],
+      "properties": {
+        "base": {
+          "type": "string",
+          "description": "Thermal base or floor used for telemetry mapping."
+        },
+        "alarm_by_field_transition": {
+          "type": "boolean",
+          "description": "Whether alarms are triggered by field transitions."
+        },
+        "example_threshold": {
+          "type": "string",
+          "description": "Illustrative threshold that triggers a field change."
+        },
+        "packet_bits": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Nominal packet width for temperature telemetry packets."
+        }
+      }
+    },
+    "voltageTelemetry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seated_at",
+        "base",
+        "reading_rule",
+        "packet_bits"
+      ],
+      "properties": {
+        "seated_at": {
+          "type": "string",
+          "description": "Seated count or center definition for voltage telemetry."
+        },
+        "base": {
+          "type": "number",
+          "description": "Reference base value for voltage telemetry."
+        },
+        "reading_rule": {
+          "type": "string",
+          "description": "Formula used to map voltage to count space."
+        },
+        "packet_bits": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Nominal packet width for voltage packets."
+        }
+      }
+    },
+    "powerTelemetry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "quantity",
+        "base",
+        "reading_rule",
+        "packet_bits"
+      ],
+      "properties": {
+        "quantity": {
+          "type": "string",
+          "description": "Type of power quantity being represented."
+        },
+        "base": {
+          "type": "string",
+          "description": "Declared or constructed base used for power mapping."
+        },
+        "reading_rule": {
+          "type": "string",
+          "description": "Formula used to map power to count space."
+        },
+        "packet_bits": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "string",
+              "description": "Packet width range or textual note when not fixed."
+            }
+          ],
+          "description": "Nominal packet width or range for power packets."
+        }
+      }
+    },
+    "statusNote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Readiness or implementation status note."
+        }
+      }
+    }
+  }
+}
