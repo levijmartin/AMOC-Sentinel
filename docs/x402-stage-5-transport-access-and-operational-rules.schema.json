@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/x402-stage-5-transport-access-and-operational-rules.schema.json",
+  "title": "x402 Stage 5 Transport Rails, Access Layer and Operational Rules",
+  "description": "Schema for Transport Rails, Access Layer and Operational Rules.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "title",
+    "core_axiom",
+    "master_mechanic",
+    "source_9",
+    "source_10",
+    "summary_table",
+    "operational_rules",
+    "action",
+    "notes"
+  ],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "x402",
+      "description": "Protocol or document format identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the rules document."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable document title."
+    },
+    "core_axiom": {
+      "type": "string",
+      "description": "Foundational axiom preloaded into the system."
+    },
+    "master_mechanic": {
+      "type": "string",
+      "description": "Primary transformation or operating mechanic."
+    },
+    "source_9": {
+      "$ref": "#/$defs/sourceRail"
+    },
+    "source_10": {
+      "$ref": "#/$defs/sourceRail"
+    },
+    "summary_table": {
+      "$ref": "#/$defs/summaryTable"
+    },
+    "operational_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "description": "Ordered list of core operating rules for the coordinate system."
+    },
+    "action": {
+      "type": "string",
+      "description": "Requested system action or optimization target."
+    },
+    "notes": {
+      "type": "string",
+      "description": "General notes about completion of the MVP mapping."
+    }
+  },
+  "$defs": {
+    "sourceRail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "role",
+        "description"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Human-readable source or rail name."
+        },
+        "role": {
+          "type": "string",
+          "description": "Operational role of the rail in the architecture."
+        },
+        "description": {
+          "type": "string",
+          "description": "Narrative description of the rail and its function."
+        }
+      }
+    },
+    "summaryTable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "status_overview"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Narrative description of the summary table."
+        },
+        "status_overview": {
+          "$ref": "#/$defs/statusOverview"
+        }
+      }
+    },
+    "statusOverview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ready",
+        "ready_with_rules",
+        "transport",
+        "access_rail"
+      ],
+      "properties": {
+        "ready": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Capabilities or source mappings that are immediately ready."
+        },
+        "ready_with_rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Capabilities that are ready subject to the established ruleset."
+        },
+        "transport": {
+          "type": "string",
+          "description": "Named transport rail for packet carriage."
+        },
+        "access_rail": {
+          "type": "string",
+          "description": "Named access or monetization rail."
+        }
+      }
+    }
+  }
+}
