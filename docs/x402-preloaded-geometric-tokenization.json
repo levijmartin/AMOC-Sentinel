@@ -1,0 +1,252 @@
+{
+  "format": "x402",
+  "version": "0.3",
+  "title": "Preloaded Geometric Tokenization",
+  "subtitle": "The Axiom of 1 as Preloaded Unity Generating Binary Sequence, Nested Counts, and a 4D Inverse Operational Encoding with the Master Table as Fixed Vocabulary",
+  "revision": "v0.3",
+  "organization": "Future Caribbean AI, Team AMOC Sentienl",
+  "date": "2026-07",
+  "document_type": "structured-extraction",
+  "introductory_note": "This paper reframes the mechanical counting system as preloaded geometric tokenization. The single axiom of unity (1) is treated as the preloaded starting token. The first operation produces 2 of 1 and initiates the binary sequence. All subsequent structure — the Master Table, compounding operations, and counts inside counts — follows deterministically from this preloaded unity. The token is both an address and a value, both machined from the one inverse operational mechanical count. The coordinate system is preloaded; data mapping is external.",
+  "revision_notes": {
+    "new_in_v0_3": [
+      "Count 5 remains the structural 4D closure of the primary cycle (xyzw).",
+      "For computation and tokenization, the count is indefinitely repeatable.",
+      "Counts c = 6, 7, 8, ... are not new operations but continued inward refinement at finer scale.",
+      "Base tokens live at c = 5 (512 slots, 9 bits) for efficient offline storage.",
+      "Refinement is machined on demand by appending counted bits to the same progressive bitstream.",
+      "The overlay layer for physical data read on the coordinate includes gas and thermal overlays implemented and validated."
+    ]
+  },
+  "axiom_of_preloaded_unity": {
+    "axiom": "There is exactly one physical unit.",
+    "equivalent_views": [
+      "1",
+      "-1",
+      "sqrt(1)",
+      "sqrt(2^0)"
+    ],
+    "definition": "The number 1 is preloaded unity. It is not generated; it is the shared foundation present before any counting begins.",
+    "role": "The axiom is both the largest entity and the smallest indivisible token in the system."
+  },
+  "contents_outline": [
+    "The Direction of the Count and the Mechanic It Carries",
+    "The Master Table — Preloaded Vocabulary",
+    "Count 1 of 1 Unit Makes 2 of 1 — Birth of the Binary Sequence",
+    "Compounding Operations and the Master Count",
+    "Counts Inside Counts — Nested Tokenization",
+    "Preloaded Unity as the Foundation of Tokenization",
+    "Address and Value, Both Machined from the Inverse Operational Count",
+    "Indefinite Inverse Counting — The Count Continues",
+    "On-Demand Refinement — Same Point, Finer Grid",
+    "Design for Future Caribbean AI",
+    "Reference Implementation (v0.3)",
+    "The Overlay Layer — Physical Data on the Coordinate",
+    "Conclusion",
+    "Appendices A-D"
+  ],
+  "count_direction_and_mechanic": {
+    "claim_1": "sqrt(2) is the metric of the inward count.",
+    "outward_counting": {
+      "sequence": ["1", "2", "4", "8", "..."],
+      "metric": "2^c",
+      "meaning": "Mechanical Domain Quantity; counts whole units outward."
+    },
+    "inward_counting": {
+      "metric": "sqrt(2)^d",
+      "meaning": "The inward direction measured from the inside by geometric halving."
+    },
+    "coincidence_at_axiom": "sqrt(2)^0 = 2^0 = 1",
+    "claim_2": "The count and the depth come apart.",
+    "depth_definition": "Depth d is the honest exponent and advances once per halving.",
+    "count_definition": "Count c is the operation index and advances only when the depth completes a rational-irrational pair.",
+    "count_depth_mapping": [
+      "c=1 -> d=1",
+      "c=2 -> d=2,3",
+      "c=3 -> d=4,5",
+      "c=4 -> d=6,7",
+      "c=5 -> d=8,9"
+    ],
+    "closure_faces": {
+      "rational": "512 at d=8",
+      "irrational": "512*sqrt(2) ≈ 724.077 at d=9"
+    }
+  },
+  "master_table_preloaded_vocabulary": [
+    {
+      "count": 0,
+      "depth": 0,
+      "mechanic": "sqrt(2)^0 = 1",
+      "unit_decimal": 1,
+      "mdq_2c": 1,
+      "parity": "even -> rational",
+      "reading": "1 (preloaded unity)"
+    },
+    {
+      "count": 1,
+      "depth": 1,
+      "mechanic": "sqrt(2)^1 = sqrt(2) ≈ 1.414",
+      "unit_decimal": 2,
+      "mdq_2c": 2,
+      "parity": "odd -> irrational",
+      "reading": "2*sqrt(2) ≈ 2.828"
+    },
+    {
+      "count": 2,
+      "depth": 2,
+      "mechanic": "sqrt(2)^2 = 2",
+      "unit_decimal": 2,
+      "mdq_2c": 4,
+      "parity": "even -> rational",
+      "reading": "8"
+    },
+    {
+      "count": 2,
+      "depth": 3,
+      "mechanic": "sqrt(2)^3 = 2*sqrt(2) ≈ 2.828",
+      "unit_decimal": 4,
+      "mdq_2c": 4,
+      "parity": "odd -> irrational",
+      "reading": "8*sqrt(2) ≈ 11.314"
+    },
+    {
+      "count": 3,
+      "depth": 4,
+      "mechanic": "sqrt(2)^4 = 4",
+      "unit_decimal": 4,
+      "mdq_2c": 8,
+      "parity": "even -> rational",
+      "reading": "32"
+    },
+    {
+      "count": 3,
+      "depth": 5,
+      "mechanic": "sqrt(2)^5 = 4*sqrt(2) ≈ 5.657",
+      "unit_decimal": 8,
+      "mdq_2c": 8,
+      "parity": "odd -> irrational",
+      "reading": "32*sqrt(2) ≈ 45.255"
+    },
+    {
+      "count": 4,
+      "depth": 6,
+      "mechanic": "sqrt(2)^6 = 8",
+      "unit_decimal": 8,
+      "mdq_2c": 16,
+      "parity": "even -> rational",
+      "reading": "128"
+    },
+    {
+      "count": 4,
+      "depth": 7,
+      "mechanic": "sqrt(2)^7 = 8*sqrt(2) ≈ 11.314",
+      "unit_decimal": 16,
+      "mdq_2c": 16,
+      "parity": "odd -> irrational",
+      "reading": "128*sqrt(2) ≈ 181.019"
+    },
+    {
+      "count": 5,
+      "depth": 8,
+      "mechanic": "sqrt(2)^8 = 16",
+      "unit_decimal": 16,
+      "mdq_2c": 32,
+      "parity": "even -> rational",
+      "reading": "512 (square)"
+    },
+    {
+      "count": 5,
+      "depth": 9,
+      "mechanic": "sqrt(2)^9 = 16*sqrt(2) ≈ 22.627",
+      "unit_decimal": 32,
+      "mdq_2c": 32,
+      "parity": "odd -> irrational",
+      "reading": "512*sqrt(2) ≈ 724.077 (true sphere)"
+    }
+  ],
+  "closure_generated_values": {
+    "address_span": {
+      "value": 720,
+      "formula": "c * d * 16 = 5 * 9 * 16",
+      "note": "Generated internally from the Master Table, not imported as an external constant."
+    },
+    "value_faces": [
+      "512",
+      "512*sqrt(2) ≈ 724.077"
+    ],
+    "emergent_ratio": {
+      "value": 1.40625,
+      "fraction": "45/32",
+      "formula": "720 / 512 = (5 * 9 * 16) / (32 * 16)"
+    }
+  },
+  "birth_of_binary_sequence": {
+    "first_operation": "Count 1 of 1 unit -> 2 of 1",
+    "meaning": "This is the first distinction, first split, and first bit. It is the mechanical birth of binary.",
+    "consequence": "Every subsequent count compounds upon this binary foundation."
+  },
+  "compounding_operations": {
+    "principle": "Each new count is a compounding operation built directly upon the output of the prior count.",
+    "examples": [
+      "Count 0: preloaded unity (1)",
+      "Count 1: produces 2 of 1 (first binary split)"
+    ]
+  },
+  "indefinite_inverse_counting": {
+    "core_claim": "Closure is structural, not terminal.",
+    "meaning": "Count 5 closes the primary 4D cycle but does not terminate computation or tokenization.",
+    "continued_counts": "Counts c=6,7,8,... continue the same inward mechanic at finer scale.",
+    "base_token_strategy": {
+      "base_count": 5,
+      "slots": 512,
+      "bits": 9,
+      "purpose": "efficient offline storage"
+    }
+  },
+  "on_demand_refinement": {
+    "description": "Higher resolution is obtained by refining the same point on a finer grid, not by introducing a different system.",
+    "mechanic": "Refinement appends counted bits to the same progressive bitstream.",
+    "principle": "The spans do not change; the grid does.",
+    "operational_options": [
+      "store/use base tokens at count 5",
+      "append refinement bits only when higher precision is requested"
+    ]
+  },
+  "address_and_value_model": {
+    "address": "signed count-position on the 720 dual span and the 512 vector",
+    "value": "the 4D inverse-wavefunction state read off the master count, raised dimension by dimension through inversion of the one axiom about its 0 center",
+    "principle": "Both address and value are machined from the same inverse operational mechanical count."
+  },
+  "overlay_layer": {
+    "description": "Physical data is read on the preloaded coordinate system rather than changing the coordinate itself.",
+    "implemented_and_validated": [
+      "gas overlay",
+      "thermal overlay"
+    ],
+    "status_note": "The coordinate system is preloaded; data mapping is external."
+  },
+  "future_caribbean_ai_design_relevance": {
+    "fit": [
+      "offline AI token storage at a fixed base vocabulary",
+      "low-bandwidth progressive refinement",
+      "deterministic token/address generation without training",
+      "overlay-based physical sensing integration"
+    ]
+  },
+  "extraction_status": {
+    "state": "partial structured extraction from provided visible text",
+    "covered_sections": [
+      "Introductory Note",
+      "The Axiom of 1 as Preloaded Unity",
+      "Contents outline",
+      "The Direction of the Count and the Mechanic It Carries",
+      "The Master Table — Preloaded Vocabulary",
+      "Count 1 of 1 Unit Makes 2 of 1 — Birth of the Binary Sequence",
+      "Beginning of Compounding Operations and the Master Count"
+    ],
+    "not_yet_extracted": [
+      "full sections 4-13 beyond the visible excerpt",
+      "appendices and worked examples not visible in the provided text"
+    ]
+  }
+}
