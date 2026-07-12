@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/x402-core-rules-stage-1.schema.json",
+  "title": "x402 Stage 1 Core Rules",
+  "description": "Schema for Core Rules - Reading, Alarm, Cross-Check and Progressive Truncation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "title",
+    "core_axiom",
+    "master_mechanic",
+    "general_reading_rules",
+    "progressive_truncation",
+    "alarm_semantics",
+    "cross_check_rules",
+    "base_seating",
+    "action",
+    "notes"
+  ],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "x402",
+      "description": "Protocol or document format identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the rules document."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable document title."
+    },
+    "core_axiom": {
+      "type": "string",
+      "description": "Foundational axiom preloaded into the system."
+    },
+    "master_mechanic": {
+      "type": "string",
+      "description": "Primary transformation or operating mechanic."
+    },
+    "general_reading_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "formulas",
+        "packet_structure"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Summary of how physical quantities are interpreted."
+        },
+        "formulas": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "floor_base",
+            "seated_base"
+          ],
+          "properties": {
+            "floor_base": {
+              "type": "string",
+              "description": "Formula for count using a floor base."
+            },
+            "seated_base": {
+              "type": "string",
+              "description": "Formula for count using a seated base."
+            }
+          }
+        },
+        "packet_structure": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "field",
+            "inner_node",
+            "dual_bit",
+            "zero"
+          ],
+          "properties": {
+            "field": {
+              "type": "string",
+              "description": "Meaning of the integer part of the count."
+            },
+            "inner_node": {
+              "type": "string",
+              "description": "Meaning of the fractional part mapped into a 5-bit node."
+            },
+            "dual_bit": {
+              "type": "string",
+              "description": "Meaning of the leading bit for signed quantities."
+            },
+            "zero": {
+              "type": "string",
+              "description": "Definition of how zero is represented."
+            }
+          }
+        }
+      }
+    },
+    "progressive_truncation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "example"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Definition of truncation behavior."
+        },
+        "example": {
+          "type": "string",
+          "description": "Illustrative example of truncation while preserving field identity."
+        }
+      }
+    },
+    "alarm_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "usage"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Definition of a field transition or alarm."
+        },
+        "usage": {
+          "type": "string",
+          "description": "Implementation or hardware usage note."
+        }
+      }
+    },
+    "cross_check_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "limb_against_limb",
+        "source_against_source"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "General cross-check rule summary."
+        },
+        "limb_against_limb": {
+          "type": "string",
+          "description": "Cross-check rule for signed quantities with opposite polarity."
+        },
+        "source_against_source": {
+          "type": "string",
+          "description": "Cross-check rule for independent readings of the same quantity."
+        }
+      }
+    },
+    "base_seating": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "types",
+        "note"
+      ],
+      "properties": {
+        "types": {
+          "type": "array",
+          "description": "Allowed base seating modes.",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "Machined from the count",
+              "Declared as explicit external configuration"
+            ]
+          }
+        },
+        "note": {
+          "type": "string",
+          "description": "Constraint on how measured standard values are used."
+        }
+      }
+    },
+    "action": {
+      "type": "string",
+      "description": "Requested system action or optimization target."
+    },
+    "notes": {
+      "type": "string",
+      "description": "General notes about applicability or scope."
+    }
+  }
+}
