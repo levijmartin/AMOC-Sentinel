@@ -2,10 +2,11 @@
 
 ## Purpose
 
-This short note compares four options already discussed for AMOC Sentinel:
+This short note compares five options already discussed for AMOC Sentinel:
 - mem0
 - FlashDB
 - Needle
+- ASCILINE
 - Metauto Neural Computer
 
 These do **not** solve the same problem, so the right question is not "which one wins overall?" but **which one fits which layer**.
@@ -53,6 +54,21 @@ Not best for:
 - scientific data backbone storage
 - deterministic packet/x402 execution logic
 
+### ASCILINE
+Best for:
+- terminal demos
+- low-bandwidth visualization
+- CLI/status displays
+- packet/lattice/debug rendering
+- text-first presentation of overlays and transitions
+
+Not best for:
+- persistence
+- operator memory
+- retrieval
+- ingestion/data backbone
+- orchestration/runtime
+
 ### Metauto Neural Computer
 Best for:
 - future-state inspiration
@@ -92,8 +108,16 @@ Why:
 - helps ground agent answers in repo material
 - strong fit for internal knowledge-assistant and documentation-navigation use cases
 
+### Terminal visualization / demo layer
+**Best fit: ASCILINE**
+
+Why:
+- useful for low-bandwidth or terminal-native presentation
+- natural fit for packet, lattice, overlay, and truncation demos
+- helpful as a developer/debug visualization tool without needing a heavy UI
+
 ### Scientific data / ingestion backbone
-**Best fit: none of mem0, FlashDB, Needle, or Metauto as the primary answer**
+**Best fit: none of mem0, FlashDB, Needle, ASCILINE, or Metauto as the primary answer**
 
 Better direction:
 - normal files/object storage
@@ -115,6 +139,7 @@ For the AMOC MVP, the cleanest working split is:
 - **mem0** for operator/user memory
 - **FlashDB** for lightweight local app persistence
 - **Needle** for knowledge retrieval and document grounding
+- **ASCILINE** for optional terminal visualization and demo/debug output
 - **standard code + conventional storage** for climate/ocean data and workflow state
 - **Metauto ideas** only as future architecture inspiration
 
@@ -125,6 +150,7 @@ If the question is:
 - **"How do we remember the operator?"** -> mem0
 - **"How do we persist local app state simply?"** -> FlashDB
 - **"How do we retrieve the right docs and reference knowledge?"** -> Needle
+- **"How do we present packet/lattice state in a terminal or low-bandwidth demo?"** -> ASCILINE
 - **"How do we store climate/ocean data?"** -> conventional data storage, not these
 - **"How do we think about future autonomous agent architecture?"** -> Metauto
 
@@ -135,7 +161,8 @@ These options are complementary more than competing:
 - mem0 remembers the user
 - FlashDB persists the app
 - Needle retrieves the knowledge
+- ASCILINE presents the state
 - Metauto informs the future vision
 
 For AMOC Sentinel right now, the practical path is:
-**build with mem0 + FlashDB + Needle-style grounding where useful, and treat Metauto as inspiration rather than dependency.**
+**build with mem0 + FlashDB + Needle-style grounding where useful, use ASCILINE only where terminal visualization helps, and treat Metauto as inspiration rather than dependency.**
