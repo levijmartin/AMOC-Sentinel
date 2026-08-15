@@ -7,61 +7,103 @@
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <main class="container">
-    <h1>AMOC Sentinel Forecast Service</h1>
-    <p class="sub">Simple Go form app for testing weather/risk outputs and x402-style premium access.</p>
+  <main class="screen-shell">
+    <div class="screen-overlay"></div>
 
-    <section class="card">
-      <form method="post" action="/">
+    <section class="hud-panel hud-left top">
+      <div class="panel-title">VESSEL OPTIMIZATION</div>
+      <div class="panel-body small-grid">
+        <div><span>Monitored</span><strong>24 routes</strong></div>
+        <div><span>Marine intel</span><strong>Live</strong></div>
+        <div><span>ETA fidelity</span><strong>94%</strong></div>
+        <div><span>Fuel signal</span><strong>Stable</strong></div>
+      </div>
+    </section>
+
+    <section class="hud-panel hud-right top">
+      <div class="panel-title">SYSTEM STATUS</div>
+      <div class="panel-body status-list">
+        <div><span>Digital twin</span><strong>Active</strong></div>
+        <div><span>Satellite data</span><strong>Live</strong></div>
+        <div><span>IoT sensors</span><strong>Online</strong></div>
+      </div>
+    </section>
+
+    <section class="hero-copy">
+      <p class="eyebrow">AMOC SENTINEL</p>
+      <h1>Thermohaline circulation, maritime risk, and coastal forecast intelligence</h1>
+      <p class="sub">Cold-blob-to-Caribbean monitoring with operator-ready signals, premium advisory hooks, and x402-style access boundaries.</p>
+    </section>
+
+    <section class="form-panel">
+      <div class="panel-title">WEATHER FORECAST</div>
+      <p class="panel-caption">Atlantic sector query console</p>
+
+      <form method="post" action="/" class="forecast-form">
         <label>
-          Location
+          <span>Location</span>
           <input type="text" name="location" placeholder="Bridgetown" required />
         </label>
 
         <label>
-          Region
+          <span>Region</span>
           <input type="text" name="region" placeholder="Barbados" />
         </label>
 
         <label>
-          Date
+          <span>Date</span>
           <input type="date" name="date" required />
         </label>
 
-        <button type="submit">Get Forecast</button>
+        <button type="submit">Run Forecast</button>
       </form>
-    </section>
 
-    {{if .Error}}
-    <section class="card error">{{.Error}}</section>
-    {{end}}
+      {{if .Error}}
+      <section class="error-banner">{{.Error}}</section>
+      {{end}}
+    </section>
 
     {{if .Forecast}}
-    <section class="card result">
-      <h2>Forecast Result</h2>
-      <ul>
-        <li><strong>Location:</strong> {{.Forecast.Location}}{{if .Forecast.Region}}, {{.Forecast.Region}}{{end}}</li>
-        <li><strong>Date:</strong> {{.Forecast.Date}}</li>
-        <li><strong>Condition:</strong> {{.Forecast.Condition}}</li>
-        <li><strong>Temperature:</strong> {{.Forecast.TemperatureC}}°C</li>
-        <li><strong>Wind:</strong> {{.Forecast.WindKph}} kph</li>
-        <li><strong>Rain Chance:</strong> {{.Forecast.RainChance}}%</li>
-        <li><strong>Marine Heat Risk:</strong> {{.Forecast.MarineHeatRisk}}</li>
-        <li><strong>Coastal Flood Risk:</strong> {{.Forecast.CoastalFloodRisk}}</li>
-        <li><strong>Risk Score:</strong> {{.Forecast.RiskScore}}</li>
-      </ul>
-      <p><strong>Summary:</strong> {{.Forecast.Summary}}</p>
+    <section class="hud-panel result-panel">
+      <div class="panel-title">FORECAST OUTPUT</div>
+      <div class="result-grid">
+        <div class="metric"><span>Location</span><strong>{{.Forecast.Location}}{{if .Forecast.Region}}, {{.Forecast.Region}}{{end}}</strong></div>
+        <div class="metric"><span>Date</span><strong>{{.Forecast.Date}}</strong></div>
+        <div class="metric"><span>Condition</span><strong>{{.Forecast.Condition}}</strong></div>
+        <div class="metric"><span>Temperature</span><strong>{{.Forecast.TemperatureC}}°C</strong></div>
+        <div class="metric"><span>Wind</span><strong>{{.Forecast.WindKph}} kph</strong></div>
+        <div class="metric"><span>Rain Chance</span><strong>{{.Forecast.RainChance}}%</strong></div>
+        <div class="metric"><span>Marine Heat Risk</span><strong>{{.Forecast.MarineHeatRisk}}</strong></div>
+        <div class="metric"><span>Coastal Flood Risk</span><strong>{{.Forecast.CoastalFloodRisk}}</strong></div>
+        <div class="metric"><span>Risk Score</span><strong>{{.Forecast.RiskScore}}</strong></div>
+      </div>
+      <div class="summary-block">
+        <span>Summary</span>
+        <p>{{.Forecast.Summary}}</p>
+      </div>
+      {{if .Forecast.PremiumAdvisory}}
+      <div class="summary-block premium">
+        <span>Premium Advisory</span>
+        <p>{{.Forecast.PremiumAdvisory}}</p>
+      </div>
+      {{end}}
     </section>
     {{end}}
 
-    <section class="card api">
-      <h2>API test endpoints</h2>
-      <p>Free endpoint:</p>
-      <code>/api/forecast?location=Bridgetown&region=Barbados&date=2026-07-01</code>
-      <p>Premium x402-style test endpoint:</p>
-      <code>/api/premium/forecast?location=Bridgetown&region=Barbados&date=2026-07-01</code>
-      <p>Add header:</p>
-      <code>X-X402-Payment: test-paid</code>
+    <section class="hud-panel api-panel">
+      <div class="panel-title">API TEST ENDPOINTS</div>
+      <div class="summary-block compact">
+        <span>Free endpoint</span>
+        <code>/api/forecast?location=Bridgetown&region=Barbados&date=2026-07-01</code>
+      </div>
+      <div class="summary-block compact">
+        <span>Premium x402-style test endpoint</span>
+        <code>/api/premium/forecast?location=Bridgetown&region=Barbados&date=2026-07-01</code>
+      </div>
+      <div class="summary-block compact">
+        <span>Header</span>
+        <code>X-X402-Payment: test-paid</code>
+      </div>
     </section>
   </main>
 </body>
