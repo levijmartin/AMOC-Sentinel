@@ -11,6 +11,16 @@
     <div class="screen-overlay"></div>
     <div class="scanline"></div>
 
+    <aside class="data-rail left-rail">
+      <div class="rail-label">Atlantic feed</div>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </aside>
+
+    <aside class="data-rail right-rail">
+      <div class="rail-label">Coastal feed</div>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </aside>
+
     <section class="hud-panel hud-left top framed-panel">
       <div class="panel-title">VESSEL OPTIMIZATION</div>
       <div class="panel-body small-grid">
@@ -103,24 +113,39 @@
 
     {{if .Forecast}}
     <section class="hud-panel result-panel framed-panel">
-      <div class="panel-title">FORECAST OUTPUT</div>
+      <div class="result-topline">
+        <div>
+          <div class="panel-title">FORECAST OUTPUT</div>
+          <div class="result-location">{{.Forecast.Location}}{{if .Forecast.Region}}, {{.Forecast.Region}}{{end}}</div>
+        </div>
+        <div class="confidence-panel">
+          <span>Forecast confidence</span>
+          <div class="confidence-meter"><i></i></div>
+          <strong>92%</strong>
+        </div>
+      </div>
+
+      <div class="risk-pill-row">
+        <span class="risk-pill neutral">Condition: {{.Forecast.Condition}}</span>
+        <span class="risk-pill {{if eq .Forecast.MarineHeatRisk "Elevated"}}high{{else if eq .Forecast.MarineHeatRisk "Moderate"}}medium{{else}}low{{end}}">Marine Heat: {{.Forecast.MarineHeatRisk}}</span>
+        <span class="risk-pill {{if eq .Forecast.CoastalFloodRisk "Elevated"}}high{{else if eq .Forecast.CoastalFloodRisk "Moderate"}}medium{{else}}low{{end}}">Coastal Flood: {{.Forecast.CoastalFloodRisk}}</span>
+        <span class="risk-pill neutral">Risk Score: {{.Forecast.RiskScore}}</span>
+      </div>
+
       <div class="result-grid">
-        <div class="metric"><span>Location</span><strong>{{.Forecast.Location}}{{if .Forecast.Region}}, {{.Forecast.Region}}{{end}}</strong></div>
         <div class="metric"><span>Date</span><strong>{{.Forecast.Date}}</strong></div>
-        <div class="metric"><span>Condition</span><strong>{{.Forecast.Condition}}</strong></div>
         <div class="metric"><span>Temperature</span><strong>{{.Forecast.TemperatureC}}°C</strong></div>
         <div class="metric"><span>Wind</span><strong>{{.Forecast.WindKph}} kph</strong></div>
         <div class="metric"><span>Rain Chance</span><strong>{{.Forecast.RainChance}}%</strong></div>
         <div class="metric"><span>Marine Heat Risk</span><strong>{{.Forecast.MarineHeatRisk}}</strong></div>
         <div class="metric"><span>Coastal Flood Risk</span><strong>{{.Forecast.CoastalFloodRisk}}</strong></div>
-        <div class="metric"><span>Risk Score</span><strong>{{.Forecast.RiskScore}}</strong></div>
       </div>
-      <div class="summary-block">
+      <div class="summary-block primary-callout">
         <span>Summary</span>
         <p>{{.Forecast.Summary}}</p>
       </div>
       {{if .Forecast.PremiumAdvisory}}
-      <div class="summary-block premium">
+      <div class="summary-block premium premium-callout">
         <span>Premium Advisory</span>
         <p>{{.Forecast.PremiumAdvisory}}</p>
       </div>
