@@ -9,8 +9,9 @@
 <body>
   <main class="screen-shell">
     <div class="screen-overlay"></div>
+    <div class="scanline"></div>
 
-    <section class="hud-panel hud-left top">
+    <section class="hud-panel hud-left top framed-panel">
       <div class="panel-title">VESSEL OPTIMIZATION</div>
       <div class="panel-body small-grid">
         <div><span>Monitored</span><strong>24 routes</strong></div>
@@ -18,24 +19,49 @@
         <div><span>ETA fidelity</span><strong>94%</strong></div>
         <div><span>Fuel signal</span><strong>Stable</strong></div>
       </div>
+      <div class="micro-chart bars-chart">
+        <div class="bar b1"></div>
+        <div class="bar b2"></div>
+        <div class="bar b3"></div>
+        <div class="bar b4"></div>
+        <div class="bar b5"></div>
+      </div>
     </section>
 
-    <section class="hud-panel hud-right top">
+    <section class="hud-panel hud-right top framed-panel">
       <div class="panel-title">SYSTEM STATUS</div>
       <div class="panel-body status-list">
         <div><span>Digital twin</span><strong>Active</strong></div>
         <div><span>Satellite data</span><strong>Live</strong></div>
         <div><span>IoT sensors</span><strong>Online</strong></div>
       </div>
+      <div class="badge-row">
+        <span class="status-badge live">Live ingest</span>
+        <span class="status-badge warn">Watch Atlantic</span>
+      </div>
     </section>
 
     <section class="hero-copy">
       <p class="eyebrow">AMOC SENTINEL</p>
+      <div class="hero-tag-row">
+        <span class="status-badge live">Thermohaline Watch</span>
+        <span class="status-badge">Coastal Ops</span>
+        <span class="status-badge">x402 Ready</span>
+      </div>
       <h1>Thermohaline circulation, maritime risk, and coastal forecast intelligence</h1>
       <p class="sub">Cold-blob-to-Caribbean monitoring with operator-ready signals, premium advisory hooks, and x402-style access boundaries.</p>
     </section>
 
-    <section class="form-panel">
+    <section class="center-stage">
+      <div class="globe-ring ring-1"></div>
+      <div class="globe-ring ring-2"></div>
+      <div class="globe-ring ring-3"></div>
+      <div class="orbital orbital-1"></div>
+      <div class="orbital orbital-2"></div>
+      <div class="core-label">AMOC<br><span>SIGNAL FLOW</span></div>
+    </section>
+
+    <section class="form-panel framed-panel">
       <div class="panel-title">WEATHER FORECAST</div>
       <p class="panel-caption">Atlantic sector query console</p>
 
@@ -63,8 +89,20 @@
       {{end}}
     </section>
 
+    <section class="hud-panel telemetry-panel framed-panel">
+      <div class="panel-title">THERMOHALINE ANALYTICS</div>
+      <div class="telemetry-stack">
+        <div class="metric hero-metric"><span>AMOC Stability</span><strong>0.81</strong></div>
+        <div class="metric"><span>Caribbean transport</span><strong>Nominal</strong></div>
+        <div class="metric"><span>Cold blob signal</span><strong>Tracked</strong></div>
+      </div>
+      <div class="micro-chart line-chart">
+        <span></span>
+      </div>
+    </section>
+
     {{if .Forecast}}
-    <section class="hud-panel result-panel">
+    <section class="hud-panel result-panel framed-panel">
       <div class="panel-title">FORECAST OUTPUT</div>
       <div class="result-grid">
         <div class="metric"><span>Location</span><strong>{{.Forecast.Location}}{{if .Forecast.Region}}, {{.Forecast.Region}}{{end}}</strong></div>
@@ -90,7 +128,7 @@
     </section>
     {{end}}
 
-    <section class="hud-panel api-panel">
+    <section class="hud-panel api-panel framed-panel">
       <div class="panel-title">API TEST ENDPOINTS</div>
       <div class="summary-block compact">
         <span>Free endpoint</span>
