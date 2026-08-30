@@ -24,9 +24,9 @@
     <section class="hud-panel hud-left top framed-panel">
       <div class="panel-title">VESSEL OPTIMIZATION</div>
       <div class="panel-body small-grid">
-        <div><span>Monitored</span><strong>24 routes</strong></div>
+        <div><span>Monitored</span><strong>Regional routes</strong></div>
         <div><span>Marine intel</span><strong>Live</strong></div>
-        <div><span>ETA fidelity</span><strong>94%</strong></div>
+        <div><span>ETA fidelity</span><strong>Verified</strong></div>
         <div><span>Fuel signal</span><strong>Stable</strong></div>
       </div>
       <div class="micro-chart bars-chart">
@@ -102,7 +102,7 @@
     <section class="hud-panel telemetry-panel framed-panel">
       <div class="panel-title">THERMOHALINE ANALYTICS</div>
       <div class="telemetry-stack">
-        <div class="metric hero-metric"><span>AMOC Stability</span><strong>0.81</strong></div>
+        <div class="metric hero-metric"><span>AMOC Stability</span><strong>Nominal</strong></div>
         <div class="metric"><span>Caribbean transport</span><strong>Nominal</strong></div>
         <div class="metric"><span>Cold blob signal</span><strong>Tracked</strong></div>
       </div>
@@ -113,15 +113,10 @@
 
     {{if .Forecast}}
     <section class="hud-panel result-panel framed-panel">
-      <div class="result-topline">
+      <div class="result-topline result-topline-simple">
         <div>
           <div class="panel-title">FORECAST OUTPUT</div>
           <div class="result-location">{{.Forecast.Location}}{{if .Forecast.Region}}, {{.Forecast.Region}}{{end}}</div>
-        </div>
-        <div class="confidence-panel">
-          <span>Forecast confidence</span>
-          <div class="confidence-meter"><i></i></div>
-          <strong>92%</strong>
         </div>
       </div>
 

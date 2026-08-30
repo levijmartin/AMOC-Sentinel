@@ -398,7 +398,7 @@ button:hover { filter: brightness(1.08); }
 }
 
 .telemetry-panel { grid-column: 3; grid-row: 2; align-self: start; }
-.hero-metric strong { font-size: 1.5rem; color: var(--accent-2); }
+.hero-metric strong { font-size: 1.15rem; color: var(--accent-2); }
 
 .micro-chart {
   position: relative;
@@ -469,6 +469,10 @@ button:hover { filter: brightness(1.08); }
   justify-content: space-between;
   gap: 16px;
   align-items: stretch;
+}
+
+.result-topline-simple {
+  justify-content: flex-start;
 }
 
 .result-location {
