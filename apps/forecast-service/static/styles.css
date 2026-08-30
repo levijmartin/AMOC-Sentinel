@@ -197,6 +197,17 @@ label span,
   margin-top: 12px;
 }
 
+.prose-block p {
+  margin: 0;
+  color: #d5f4fb;
+  line-height: 1.55;
+  font-size: 0.92rem;
+}
+
+.narrative-panel .summary-block {
+  background: rgba(5, 20, 34, 0.58);
+}
+
 .small-grid,
 .telemetry-stack {
   display: grid;
