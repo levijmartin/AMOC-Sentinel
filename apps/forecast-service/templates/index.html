@@ -94,14 +94,28 @@
     </section>
 
     <section class="hud-panel telemetry-panel framed-panel narrative-panel">
-      <div class="panel-title">PRACTICAL NEXT STEPS</div>
+      <div class="panel-title">SETUN ENGINE LAB</div>
       <div class="summary-block compact prose-block">
-        <span>Immediate execution</span>
-        <p>Harden the PostgreSQL function and bindings, publish benchmarks, ship one compelling case study, and build an interactive demo for trit-array visualizations.</p>
+        <span>Interactive 9-trit demo</span>
+        <p>Encode compact balanced-ternary fractions, inspect packed bits and trits, and test symmetric addition directly from the AMOC interface.</p>
       </div>
-      <div class="summary-block compact prose-block">
-        <span>Long-term position</span>
-        <p>Become the standard compact bipolar fractional representation in a few important verticals first, then expand as hardware and low-precision AI formats evolve.</p>
+      <form id="setun-form" class="setun-form">
+        <label>
+          <span>Value A</span>
+          <input type="number" id="setun-a" value="0.25" step="0.0001" min="-0.5" max="0.5" />
+        </label>
+        <label>
+          <span>Value B</span>
+          <input type="number" id="setun-b" value="-0.3333" step="0.0001" min="-0.5" max="0.5" />
+        </label>
+        <div class="setun-actions">
+          <button type="button" id="setun-encode-btn">Encode A</button>
+          <button type="button" id="setun-add-btn">Add A + B</button>
+        </div>
+      </form>
+      <div id="setun-output" class="summary-block compact prose-block setun-output">
+        <span>Awaiting input</span>
+        <p>Run an encode or addition to view packed bits, decoded value, and trit layout.</p>
       </div>
       <div class="micro-chart line-chart">
         <span></span>
@@ -146,10 +160,14 @@
     {{end}}
 
     <section class="hud-panel api-panel framed-panel narrative-panel">
-      <div class="panel-title">SETUN ADOPTION NOTES</div>
+      <div class="panel-title">SETUN API ENDPOINTS</div>
       <div class="summary-block compact prose-block">
-        <span>Realistic outlook</span>
-        <p>Industry-wide displacement of binary floating point is unlikely in the near term, but becoming the standard compact bipolar format in a few key domains is realistic and valuable.</p>
+        <span>Encode</span>
+        <code>/api/setun/encode?value=0.25</code>
+      </div>
+      <div class="summary-block compact prose-block">
+        <span>Addition</span>
+        <code>/api/setun/add?a=0.25&amp;b=-0.3333</code>
       </div>
       <div class="summary-block compact prose-block">
         <span>Bridge strategy</span>
@@ -157,5 +175,52 @@
       </div>
     </section>
   </main>
+
+  <script>
+    const setunOutput = document.getElementById('setun-output');
+    const valueA = document.getElementById('setun-a');
+    const valueB = document.getElementById('setun-b');
+
+    function renderSetunBlock(title, payload) {
+      return `
+        <div class="setun-result-block">
+          <span>${title}</span>
+          <p><strong>Bits:</strong> ${payload.hex} &nbsp; <strong>Flag:</strong> ${payload.flag}</p>
+          <p><strong>Raw:</strong> ${payload.rawValue} &nbsp; <strong>Value:</strong> ${payload.value}</p>
+          <p><strong>Trits:</strong> ${payload.tritLabel}</p>
+        </div>
+      `;
+    }
+
+    async function fetchSetun(url) {
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error('Setun request failed');
+      }
+      return res.json();
+    }
+
+    document.getElementById('setun-encode-btn').addEventListener('click', async () => {
+      try {
+        const data = await fetchSetun(`/api/setun/encode?value=${encodeURIComponent(valueA.value)}`);
+        setunOutput.innerHTML = renderSetunBlock('Encoded A', data);
+      } catch (err) {
+        setunOutput.innerHTML = '<span>Setun error</span><p>Could not encode Value A.</p>';
+      }
+    });
+
+    document.getElementById('setun-add-btn').addEventListener('click', async () => {
+      try {
+        const data = await fetchSetun(`/api/setun/add?a=${encodeURIComponent(valueA.value)}&b=${encodeURIComponent(valueB.value)}`);
+        setunOutput.innerHTML = [
+          renderSetunBlock('Operand A', data.a),
+          renderSetunBlock('Operand B', data.b),
+          renderSetunBlock('Result', data.result)
+        ].join('');
+      } catch (err) {
+        setunOutput.innerHTML = '<span>Setun error</span><p>Could not add the supplied balanced-ternary values.</p>';
+      }
+    });
+  </script>
 </body>
 </html>

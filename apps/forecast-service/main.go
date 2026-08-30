@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"math"
 	"math/rand"
 	"net/http"
 	"os"
@@ -36,6 +37,38 @@ type PageData struct {
 	Error    string
 }
 
+type TernaryFlag string
+
+const (
+	FlagNormal   TernaryFlag = "normal"
+	FlagInfinity TernaryFlag = "infinity"
+	FlagNaN      TernaryFlag = "nan"
+	setunMax     int         = 19682
+	setunBias    int         = 9841
+	setunScale   float64     = 19683.0
+)
+
+type TritEngine9 struct {
+	Bits uint16 `json:"bits"`
+}
+
+type SetunPayload struct {
+	Input     float64     `json:"input,omitempty"`
+	Bits      uint16      `json:"bits"`
+	Hex       string      `json:"hex"`
+	Flag      TernaryFlag `json:"flag"`
+	RawValue  uint16      `json:"rawValue"`
+	Value     float64     `json:"value"`
+	Trits     []int       `json:"trits"`
+	TritLabel string      `json:"tritLabel"`
+}
+
+type SetunAddResponse struct {
+	A      SetunPayload `json:"a"`
+	B      SetunPayload `json:"b"`
+	Result SetunPayload `json:"result"`
+}
+
 var (
 	tmpl                    = template.Must(template.ParseFiles("templates/index.html"))
 	memoryStore MemoryStore = NewInMemoryStore()
@@ -47,6 +80,8 @@ func main() {
 	mux.HandleFunc("/api/forecast", handleForecastAPI)
 	mux.HandleFunc("/api/premium/forecast", handlePremiumForecastAPI)
 	mux.HandleFunc("/api/memory/operator", handleOperatorMemoryAPI)
+	mux.HandleFunc("/api/setun/encode", handleSetunEncodeAPI)
+	mux.HandleFunc("/api/setun/add", handleSetunAddAPI)
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	port := os.Getenv("PORT")
@@ -169,6 +204,65 @@ func handleOperatorMemoryAPI(w http.ResponseWriter, r *http.Request) {
 	default:
 		w.Header().Set("Allow", "GET, POST")
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func handleSetunEncodeAPI(w http.ResponseWriter, r *http.Request) {
+	value, err := parseFloatParam(r, "value")
+	if err != nil {
+		http.Error(w, `{"error":"value query parameter is required and must be numeric"}`, http.StatusBadRequest)
+		return
+	}
+	engine := setunFromFloat(value)
+	writeJSON(w, buildSetunPayload(engine, value))
+}
+
+func handleSetunAddAPI(w http.ResponseWriter, r *http.Request) {
+	aValue, err := parseFloatParam(r, "a")
+	if err != nil {
+		http.Error(w, `{"error":"a query parameter is required and must be numeric"}`, http.StatusBadRequest)
+		return
+	}
+	bValue, err := parseFloatParam(r, "b")
+	if err != nil {
+		http.Error(w, `{"error":"b query parameter is required and must be numeric"}`, http.StatusBadRequest)
+		return
+	}
+	a := setunFromFloat(aValue)
+	b := setunFromFloat(bValue)
+	result := a.Add(b)
+	writeJSON(w, SetunAddResponse{
+		A:      buildSetunPayload(a, aValue),
+		B:      buildSetunPayload(b, bValue),
+		Result: buildSetunPayload(result, result.ToFloat()),
+	})
+}
+
+func parseFloatParam(r *http.Request, key string) (float64, error) {
+	value := strings.TrimSpace(r.URL.Query().Get(key))
+	if value == "" {
+		return 0, fmt.Errorf("missing value")
+	}
+	return strconv.ParseFloat(value, 64)
+}
+
+func buildSetunPayload(engine TritEngine9, input float64) SetunPayload {
+	trits := engine.ToTrits()
+	tritInts := make([]int, len(trits))
+	parts := make([]string, len(trits))
+	for i, t := range trits {
+		tritInts[i] = t
+		parts[i] = strconv.Itoa(t)
+	}
+	return SetunPayload{
+		Input:     input,
+		Bits:      engine.Bits,
+		Hex:       fmt.Sprintf("0x%04X", engine.Bits),
+		Flag:      engine.Flag(),
+		RawValue:  engine.RawValue(),
+		Value:     engine.ToFloat(),
+		Trits:     tritInts,
+		TritLabel: strings.Join(parts, " "),
 	}
 }
 
@@ -298,4 +392,94 @@ func logRequest(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 		log.Printf("%s %s %s", r.Method, r.URL.Path, strconv.FormatInt(time.Since(start).Milliseconds(), 10)+"ms")
 	})
+}
+
+func (t TritEngine9) Flag() TernaryFlag {
+	switch (t.Bits >> 14) & 0x03 {
+	case 0:
+		return FlagNormal
+	case 1:
+		return FlagInfinity
+	case 2:
+		return FlagNaN
+	default:
+		return FlagNaN
+	}
+}
+
+func (t TritEngine9) RawValue() uint16 {
+	return t.Bits & 0x3FFF
+}
+
+func setunFromFloat(val float64) TritEngine9 {
+	if math.IsNaN(val) {
+		return TritEngine9{Bits: 2 << 14}
+	}
+	if math.IsInf(val, 0) {
+		return TritEngine9{Bits: 1 << 14}
+	}
+	bounded := math.Max(-0.5, math.Min(0.5, val))
+	scaled := bounded * setunScale
+	balancedInt := int(math.Round(scaled))
+	unsignedVal := balancedInt + setunBias
+	if unsignedVal < 0 {
+		unsignedVal = 0
+	}
+	if unsignedVal > setunMax {
+		unsignedVal = setunMax
+	}
+	return TritEngine9{Bits: uint16(unsignedVal)}
+}
+
+func (t TritEngine9) ToFloat() float64 {
+	switch t.Flag() {
+	case FlagNaN:
+		return math.NaN()
+	case FlagInfinity:
+		return math.Inf(1)
+	default:
+		balancedInt := int(t.RawValue()) - setunBias
+		return float64(balancedInt) / setunScale
+	}
+}
+
+func (t TritEngine9) Add(other TritEngine9) TritEngine9 {
+	if t.Flag() == FlagNaN || other.Flag() == FlagNaN {
+		return TritEngine9{Bits: 2 << 14}
+	}
+	if t.Flag() == FlagInfinity || other.Flag() == FlagInfinity {
+		return TritEngine9{Bits: 1 << 14}
+	}
+	val1 := int(t.RawValue()) - setunBias
+	val2 := int(other.RawValue()) - setunBias
+	result := val1 + val2
+	if result < -setunBias {
+		result = -setunBias
+	}
+	if result > setunBias {
+		result = setunBias
+	}
+	return TritEngine9{Bits: uint16(result + setunBias)}
+}
+
+func (t TritEngine9) ToTrits() []int {
+	trits := make([]int, 9)
+	if t.Flag() != FlagNormal {
+		return trits
+	}
+	rem := int(t.RawValue())
+	for i := 8; i >= 0; i-- {
+		remainder := rem % 3
+		rem /= 3
+		switch remainder {
+		case 0:
+			trits[i] = 0
+		case 1:
+			trits[i] = 1
+		case 2:
+			trits[i] = -1
+			rem += 1
+		}
+	}
+	return trits
 }

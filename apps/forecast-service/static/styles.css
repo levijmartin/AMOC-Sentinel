@@ -372,6 +372,11 @@ label span,
 }
 
 .forecast-form { display: grid; gap: 14px; }
+.setun-form { display: grid; gap: 14px; margin-top: 12px; }
+.setun-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.setun-output { min-height: 140px; }
+.setun-result-block + .setun-result-block { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(122, 243, 255, 0.12); }
+.setun-result-block p strong { color: var(--accent); }
 label { display: block; }
 
 input {
