@@ -70,13 +70,15 @@ type SetunAddResponse struct {
 }
 
 var (
-	tmpl                    = template.Must(template.ParseFiles("templates/index.html"))
-	memoryStore MemoryStore = NewInMemoryStore()
+	tmpl                          = template.Must(template.ParseFiles("templates/index.html"))
+	aetherBioHawkTmpl             = template.Must(template.ParseFiles("templates/aetherbiohawk.html"))
+	memoryStore       MemoryStore = NewInMemoryStore()
 )
 
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handleIndex)
+	mux.HandleFunc("/aetherbiohawk", handleAetherBioHawk)
 	mux.HandleFunc("/api/forecast", handleForecastAPI)
 	mux.HandleFunc("/api/premium/forecast", handlePremiumForecastAPI)
 	mux.HandleFunc("/api/memory/operator", handleOperatorMemoryAPI)
@@ -93,6 +95,18 @@ func main() {
 	log.Printf("Memory interface enabled with placeholder implementation: %T", memoryStore)
 	if err := http.ListenAndServe(":"+port, logRequest(mux)); err != nil {
 		log.Fatal(err)
+	}
+}
+
+func handleAetherBioHawk(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.Header().Set("Allow", http.MethodGet)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	if err := aetherBioHawkTmpl.Execute(w, PageData{Title: "AetherBioHawk Concept Demo"}); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 

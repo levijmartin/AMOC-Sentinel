@@ -310,6 +310,26 @@ label span,
   line-height: 1.6;
 }
 
+.hero-cta {
+  display: inline-flex;
+  margin-top: 18px;
+  padding: 11px 16px;
+  border: 1px solid rgba(122, 243, 255, 0.32);
+  background: rgba(5, 20, 34, 0.72);
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  box-shadow: 0 0 18px rgba(122, 243, 255, 0.08);
+}
+
+.hero-cta:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 24px rgba(122, 243, 255, 0.18);
+}
+
 .center-stage {
   grid-column: 2;
   grid-row: 2;
@@ -573,6 +593,46 @@ button:hover { filter: brightness(1.08); }
 
 .api-panel { grid-column: 3; grid-row: 3; align-self: start; }
 .summary-block.compact code { display: block; margin-top: 8px; }
+
+.secondary-title {
+  margin-top: 18px;
+}
+
+.technology-card {
+  display: block;
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px solid rgba(141, 240, 178, 0.24);
+  background: linear-gradient(135deg, rgba(8, 38, 34, 0.82), rgba(6, 23, 40, 0.84));
+  color: var(--text);
+  text-decoration: none;
+}
+
+.technology-card span,
+.technology-card small {
+  display: block;
+}
+
+.technology-card span {
+  color: var(--accent-2);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.technology-card strong {
+  display: block;
+  margin: 7px 0;
+}
+
+.technology-card small {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.technology-card:hover {
+  border-color: rgba(141, 240, 178, 0.58);
+}
 
 code {
   background: rgba(2, 11, 19, 0.85);
