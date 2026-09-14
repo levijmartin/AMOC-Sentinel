@@ -57,13 +57,38 @@
       <a class="hero-cta" href="/aetherbiohawk">Explore AetherBioHawk Concept →</a>
     </section>
 
-    <section class="center-stage">
-      <div class="globe-ring ring-1"></div>
-      <div class="globe-ring ring-2"></div>
-      <div class="globe-ring ring-3"></div>
-      <div class="orbital orbital-1"></div>
-      <div class="orbital orbital-2"></div>
-      <div class="core-label">AMOC<br><span>SIGNAL FLOW</span></div>
+    <section class="center-stage location-globe-stage">
+      <div class="globe-shell">
+        <canvas id="location-globe" width="600" height="600"
+          {{if and .Forecast .Forecast.CoordinatesAvailable}}
+          data-has-location="true"
+          data-latitude="{{.Forecast.Latitude}}"
+          data-longitude="{{.Forecast.Longitude}}"
+          data-location="{{.Forecast.CoordinateLabel}}"
+          {{else}}
+          data-has-location="false"
+          data-latitude="18"
+          data-longitude="-42"
+          data-location="Atlantic monitoring sector"
+          {{end}}
+          aria-label="Location-aware globe centered on the forecast search area"></canvas>
+        <div class="globe-reticle" aria-hidden="true"></div>
+      </div>
+      <div class="globe-readout">
+        {{if and .Forecast .Forecast.CoordinatesAvailable}}
+        <span>SEARCH AREA ACQUIRED</span>
+        <strong>{{.Forecast.CoordinateLabel}}</strong>
+        <code>{{printf "%.4f" .Forecast.Latitude}}°, {{printf "%.4f" .Forecast.Longitude}}°</code>
+        {{else if .Forecast}}
+        <span>LOCATION LOOKUP UNAVAILABLE</span>
+        <strong>{{.Forecast.Location}}{{if .Forecast.Region}}, {{.Forecast.Region}}{{end}}</strong>
+        <code>Atlantic fallback view</code>
+        {{else}}
+        <span>LOCATION GLOBE</span>
+        <strong>Run a forecast to center the search area</strong>
+        <code>Atlantic overview</code>
+        {{end}}
+      </div>
     </section>
 
     <section class="form-panel framed-panel">
@@ -184,6 +209,162 @@
   </main>
 
   <script>
+    const globeCanvas = document.getElementById('location-globe');
+
+    function projectGlobePoint(longitude, latitude, centerLongitude, centerLatitude, radius, centerX, centerY) {
+      const radians = Math.PI / 180;
+      const lambda = longitude * radians;
+      const phi = latitude * radians;
+      const lambda0 = centerLongitude * radians;
+      const phi0 = centerLatitude * radians;
+      const delta = lambda - lambda0;
+      const visibility = Math.sin(phi0) * Math.sin(phi) + Math.cos(phi0) * Math.cos(phi) * Math.cos(delta);
+      return {
+        visible: visibility >= 0,
+        x: centerX + radius * Math.cos(phi) * Math.sin(delta),
+        y: centerY - radius * (Math.cos(phi0) * Math.sin(phi) - Math.sin(phi0) * Math.cos(phi) * Math.cos(delta))
+      };
+    }
+
+    function traceGeoRing(context, ring, centerLongitude, centerLatitude, radius, centerX, centerY) {
+      let drawing = false;
+      let visiblePoints = 0;
+      context.beginPath();
+      ring.forEach(([longitude, latitude]) => {
+        const point = projectGlobePoint(longitude, latitude, centerLongitude, centerLatitude, radius, centerX, centerY);
+        if (!point.visible) {
+          drawing = false;
+          return;
+        }
+        if (!drawing) {
+          context.moveTo(point.x, point.y);
+          drawing = true;
+        } else {
+          context.lineTo(point.x, point.y);
+        }
+        visiblePoints += 1;
+      });
+      if (visiblePoints > 2) {
+        context.fill();
+        context.stroke();
+      }
+    }
+
+    function drawGlobeGrid(context, centerLongitude, centerLatitude, radius, centerX, centerY) {
+      context.strokeStyle = 'rgba(122, 243, 255, 0.15)';
+      context.lineWidth = 1;
+      for (let latitude = -60; latitude <= 60; latitude += 30) {
+        context.beginPath();
+        let drawing = false;
+        for (let longitude = -180; longitude <= 180; longitude += 3) {
+          const point = projectGlobePoint(longitude, latitude, centerLongitude, centerLatitude, radius, centerX, centerY);
+          if (!point.visible) {
+            drawing = false;
+          } else if (!drawing) {
+            context.moveTo(point.x, point.y);
+            drawing = true;
+          } else {
+            context.lineTo(point.x, point.y);
+          }
+        }
+        context.stroke();
+      }
+      for (let longitude = -180; longitude < 180; longitude += 30) {
+        context.beginPath();
+        let drawing = false;
+        for (let latitude = -90; latitude <= 90; latitude += 2) {
+          const point = projectGlobePoint(longitude, latitude, centerLongitude, centerLatitude, radius, centerX, centerY);
+          if (!point.visible) {
+            drawing = false;
+          } else if (!drawing) {
+            context.moveTo(point.x, point.y);
+            drawing = true;
+          } else {
+            context.lineTo(point.x, point.y);
+          }
+        }
+        context.stroke();
+      }
+    }
+
+    async function renderLocationGlobe() {
+      if (!globeCanvas) return;
+      const context = globeCanvas.getContext('2d');
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const displaySize = Math.max(260, Math.min(globeCanvas.clientWidth || 420, 520));
+      globeCanvas.width = displaySize * pixelRatio;
+      globeCanvas.height = displaySize * pixelRatio;
+      context.scale(pixelRatio, pixelRatio);
+
+      const centerLongitude = Number(globeCanvas.dataset.longitude);
+      const centerLatitude = Number(globeCanvas.dataset.latitude);
+      const hasLocation = globeCanvas.dataset.hasLocation === 'true';
+      const centerX = displaySize / 2;
+      const centerY = displaySize / 2;
+      const radius = displaySize * 0.43;
+
+      const ocean = context.createRadialGradient(centerX - radius * 0.3, centerY - radius * 0.35, radius * 0.08, centerX, centerY, radius);
+      ocean.addColorStop(0, '#153e58');
+      ocean.addColorStop(0.58, '#08263b');
+      ocean.addColorStop(1, '#020b14');
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      context.fillStyle = ocean;
+      context.fill();
+      context.save();
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      context.clip();
+
+      drawGlobeGrid(context, centerLongitude, centerLatitude, radius, centerX, centerY);
+
+      try {
+        const response = await fetch('/static/ne_110m_land.geojson');
+        const world = await response.json();
+        context.fillStyle = 'rgba(48, 137, 143, 0.58)';
+        context.strokeStyle = 'rgba(154, 252, 239, 0.72)';
+        context.lineWidth = 0.9;
+        world.features.forEach((feature) => {
+          const geometry = feature.geometry;
+          const polygons = geometry.type === 'Polygon' ? [geometry.coordinates] : geometry.coordinates;
+          polygons.forEach((polygon) => polygon.forEach((ring) => {
+            traceGeoRing(context, ring, centerLongitude, centerLatitude, radius, centerX, centerY);
+          }));
+        });
+      } catch (error) {
+        context.fillStyle = 'rgba(122, 243, 255, 0.08)';
+        context.fillRect(0, 0, displaySize, displaySize);
+      }
+      context.restore();
+
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      context.strokeStyle = 'rgba(122, 243, 255, 0.62)';
+      context.lineWidth = 2;
+      context.stroke();
+
+      if (hasLocation) {
+        context.beginPath();
+        context.arc(centerX, centerY, 7, 0, Math.PI * 2);
+        context.fillStyle = '#ffcf70';
+        context.shadowColor = '#ffcf70';
+        context.shadowBlur = 22;
+        context.fill();
+        context.shadowBlur = 0;
+        context.beginPath();
+        context.arc(centerX, centerY, 16, 0, Math.PI * 2);
+        context.strokeStyle = 'rgba(255, 207, 112, 0.72)';
+        context.lineWidth = 1.5;
+        context.stroke();
+      }
+    }
+
+    renderLocationGlobe();
+    window.addEventListener('resize', () => {
+      window.clearTimeout(window.locationGlobeResizeTimer);
+      window.locationGlobeResizeTimer = window.setTimeout(renderLocationGlobe, 120);
+    });
+
     const setunOutput = document.getElementById('setun-output');
     const valueA = document.getElementById('setun-a');
     const valueB = document.getElementById('setun-b');

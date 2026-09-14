@@ -29,6 +29,10 @@ type Forecast struct {
 	PremiumAdvisory      string                 `json:"premiumAdvisory,omitempty"`
 	RememberedContext    *OperatorContextMemory `json:"rememberedContext,omitempty"`
 	MemoryImplementation string                 `json:"memoryImplementation,omitempty"`
+	Latitude             float64                `json:"latitude,omitempty"`
+	Longitude            float64                `json:"longitude,omitempty"`
+	CoordinatesAvailable bool                   `json:"coordinatesAvailable"`
+	CoordinateLabel      string                 `json:"coordinateLabel,omitempty"`
 }
 
 type PageData struct {
@@ -130,6 +134,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	forecast := generateForecast(location, region, date, false)
+	hydrateForecastCoordinates(&forecast)
 	hydrateForecastMemory(r, &forecast)
 	renderPage(w, PageData{Title: "AMOC Sentinel Forecast Service", Forecast: &forecast})
 }
@@ -145,6 +150,7 @@ func handleForecastAPI(w http.ResponseWriter, r *http.Request) {
 	}
 
 	forecast := generateForecast(location, region, date, false)
+	hydrateForecastCoordinates(&forecast)
 	hydrateForecastMemory(r, &forecast)
 	writeJSON(w, forecast)
 }
@@ -170,6 +176,7 @@ func handlePremiumForecastAPI(w http.ResponseWriter, r *http.Request) {
 	}
 
 	forecast := generateForecast(location, region, date, true)
+	hydrateForecastCoordinates(&forecast)
 	hydrateForecastMemory(r, &forecast)
 	writeJSON(w, forecast)
 }
