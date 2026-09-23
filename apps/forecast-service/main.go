@@ -53,15 +53,15 @@ const (
 )
 
 type TritEngine9 struct {
-	Bits uint16 `json:"bits"`
+	Bits uint32 `json:"bits"`
 }
 
 type SetunPayload struct {
 	Input     float64     `json:"input,omitempty"`
-	Bits      uint16      `json:"bits"`
+	Bits      uint32      `json:"bits"`
 	Hex       string      `json:"hex"`
 	Flag      TernaryFlag `json:"flag"`
-	RawValue  uint16      `json:"rawValue"`
+	RawValue  uint32      `json:"rawValue"`
 	Value     float64     `json:"value"`
 	Trits     []int       `json:"trits"`
 	TritLabel string      `json:"tritLabel"`
@@ -88,6 +88,7 @@ func main() {
 	mux.HandleFunc("/api/memory/operator", handleOperatorMemoryAPI)
 	mux.HandleFunc("/api/setun/encode", handleSetunEncodeAPI)
 	mux.HandleFunc("/api/setun/add", handleSetunAddAPI)
+	mux.HandleFunc("/api/tryte9/evaluate", handleTryte9EvaluateAPI)
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	port := os.Getenv("PORT")
@@ -278,7 +279,7 @@ func buildSetunPayload(engine TritEngine9, input float64) SetunPayload {
 	return SetunPayload{
 		Input:     input,
 		Bits:      engine.Bits,
-		Hex:       fmt.Sprintf("0x%04X", engine.Bits),
+		Hex:       fmt.Sprintf("0x%05X", engine.Bits),
 		Flag:      engine.Flag(),
 		RawValue:  engine.RawValue(),
 		Value:     engine.ToFloat(),
@@ -416,7 +417,7 @@ func logRequest(next http.Handler) http.Handler {
 }
 
 func (t TritEngine9) Flag() TernaryFlag {
-	switch (t.Bits >> 14) & 0x03 {
+	switch (t.Bits >> 15) & 0x03 {
 	case 0:
 		return FlagNormal
 	case 1:
@@ -428,16 +429,16 @@ func (t TritEngine9) Flag() TernaryFlag {
 	}
 }
 
-func (t TritEngine9) RawValue() uint16 {
-	return t.Bits & 0x3FFF
+func (t TritEngine9) RawValue() uint32 {
+	return t.Bits & 0x7FFF
 }
 
 func setunFromFloat(val float64) TritEngine9 {
 	if math.IsNaN(val) {
-		return TritEngine9{Bits: 2 << 14}
+		return TritEngine9{Bits: 2 << 15}
 	}
 	if math.IsInf(val, 0) {
-		return TritEngine9{Bits: 1 << 14}
+		return TritEngine9{Bits: 1 << 15}
 	}
 	bounded := math.Max(-0.5, math.Min(0.5, val))
 	scaled := bounded * setunScale
@@ -449,7 +450,7 @@ func setunFromFloat(val float64) TritEngine9 {
 	if unsignedVal > setunMax {
 		unsignedVal = setunMax
 	}
-	return TritEngine9{Bits: uint16(unsignedVal)}
+	return TritEngine9{Bits: uint32(unsignedVal)}
 }
 
 func (t TritEngine9) ToFloat() float64 {
@@ -466,10 +467,10 @@ func (t TritEngine9) ToFloat() float64 {
 
 func (t TritEngine9) Add(other TritEngine9) TritEngine9 {
 	if t.Flag() == FlagNaN || other.Flag() == FlagNaN {
-		return TritEngine9{Bits: 2 << 14}
+		return TritEngine9{Bits: 2 << 15}
 	}
 	if t.Flag() == FlagInfinity || other.Flag() == FlagInfinity {
-		return TritEngine9{Bits: 1 << 14}
+		return TritEngine9{Bits: 1 << 15}
 	}
 	val1 := int(t.RawValue()) - setunBias
 	val2 := int(other.RawValue()) - setunBias
@@ -480,7 +481,7 @@ func (t TritEngine9) Add(other TritEngine9) TritEngine9 {
 	if result > setunBias {
 		result = setunBias
 	}
-	return TritEngine9{Bits: uint16(result + setunBias)}
+	return TritEngine9{Bits: uint32(result + setunBias)}
 }
 
 func (t TritEngine9) ToTrits() []int {
@@ -488,7 +489,7 @@ func (t TritEngine9) ToTrits() []int {
 	if t.Flag() != FlagNormal {
 		return trits
 	}
-	rem := int(t.RawValue())
+	rem := int(t.RawValue()) - setunBias
 	for i := 8; i >= 0; i-- {
 		remainder := rem % 3
 		rem /= 3
@@ -500,6 +501,11 @@ func (t TritEngine9) ToTrits() []int {
 		case 2:
 			trits[i] = -1
 			rem += 1
+		case -1:
+			trits[i] = -1
+		case -2:
+			trits[i] = 1
+			rem -= 1
 		}
 	}
 	return trits

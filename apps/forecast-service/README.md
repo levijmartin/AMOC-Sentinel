@@ -7,6 +7,7 @@ Simple Go-based weather/risk forecast form app for AMOC Sentinel.
 - exposes a free JSON endpoint at `/api/forecast`
 - exposes an x402-style premium test endpoint at `/api/premium/forecast`
 - exposes a placeholder operator-memory endpoint at `/api/memory/operator`
+- exposes a Tryte9 software-reference demo at `/api/tryte9/evaluate`
 - simulates premium access using the `X-X402-Payment` header
 - includes a lightweight in-memory `MemoryStore` interface that can later be swapped for mem0
 
@@ -60,6 +61,23 @@ Read operator context:
 ```bash
 curl "http://localhost:8080/api/memory/operator?location=Bridgetown&region=Barbados"
 ```
+
+## Test the Tryte9 Decode option
+
+The minimum demo supports all 19,683 nine-trit values (`-9841` through `9841`), four 2-bit opcodes, and a bypassable `u + v + w = 0` prefilter:
+
+```bash
+curl "http://localhost:8080/api/tryte9/evaluate?value=42&opcode=1&u=1&v=0&w=-1&bypass=false"
+```
+
+Opcode map:
+
+- `0` / `00`: identity hold
+- `1` / `01`: `+T1` counterclockwise command
+- `2` / `10`: `-T1` inverse clockwise command
+- `3` / `11`: illegal mute/reset
+
+If the prefilter is enabled and `u + v + w != 0`, the effective opcode is forced to mute/reset. This is a software reference demo, not production FPGA/ASIC RTL or physical YBCO qualification.
 
 ## Notes
 This is still a scaffold for testing the AMOC Sentinel service shape and monetization boundary. It uses mock forecast logic right now, not real Copernicus or NOAA ingestion yet.

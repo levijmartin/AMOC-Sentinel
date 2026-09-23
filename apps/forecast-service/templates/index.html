@@ -143,6 +143,43 @@
         <span>Awaiting input</span>
         <p>Run an encode or addition to view packed bits, decoded value, and trit layout.</p>
       </div>
+
+      <div class="panel-title secondary-title">TRYTE9 DECODE OPTION</div>
+      <div class="summary-block compact prose-block">
+        <span>Software reference demo</span>
+        <p>Exercise a full-range 9-trit control word, a 2-bit opcode, and the bypassable u + v + w = 0 prefilter. This demo does not claim FPGA/ASIC or physical YBCO qualification.</p>
+      </div>
+      <form id="tryte9-form" class="setun-form">
+        <label>
+          <span>Signed value (-9841 to 9841)</span>
+          <input type="number" id="tryte9-value" value="42" min="-9841" max="9841" step="1" />
+        </label>
+        <label>
+          <span>2-bit opcode</span>
+          <select id="tryte9-opcode">
+            <option value="0">00 — Identity hold</option>
+            <option value="1" selected>01 — +T1 counterclockwise</option>
+            <option value="2">10 — −T1 inverse clockwise</option>
+            <option value="3">11 — Illegal mute/reset</option>
+          </select>
+        </label>
+        <div class="tryte9-trit-grid">
+          <label><span>u</span><input type="number" id="tryte9-u" value="1" min="-1" max="1" step="1" /></label>
+          <label><span>v</span><input type="number" id="tryte9-v" value="0" min="-1" max="1" step="1" /></label>
+          <label><span>w</span><input type="number" id="tryte9-w" value="-1" min="-1" max="1" step="1" /></label>
+        </div>
+        <label class="checkbox-label">
+          <input type="checkbox" id="tryte9-bypass" />
+          <span>Bypass Tryte9 prefilter</span>
+        </label>
+        <div class="setun-actions">
+          <button type="button" id="tryte9-run-btn">Evaluate Tryte9</button>
+        </div>
+      </form>
+      <div id="tryte9-output" class="summary-block compact prose-block setun-output">
+        <span>Ready</span>
+        <p>The prefilter passes when u + v + w = 0; otherwise the effective opcode becomes mute/reset.</p>
+      </div>
       <div class="micro-chart line-chart">
         <span></span>
       </div>
@@ -200,6 +237,10 @@
       <div class="summary-block compact prose-block">
         <span>Addition</span>
         <code>/api/setun/add?a=0.25&amp;b=-0.3333</code>
+      </div>
+      <div class="summary-block compact prose-block">
+        <span>Tryte9 Decode option</span>
+        <code>/api/tryte9/evaluate?value=42&amp;opcode=1&amp;u=1&amp;v=0&amp;w=-1&amp;bypass=false</code>
       </div>
       <div class="summary-block compact prose-block">
         <span>Bridge strategy</span>
@@ -407,6 +448,32 @@
         ].join('');
       } catch (err) {
         setunOutput.innerHTML = '<span>Setun error</span><p>Could not add the supplied balanced-ternary values.</p>';
+      }
+    });
+
+    const tryte9Output = document.getElementById('tryte9-output');
+    document.getElementById('tryte9-run-btn').addEventListener('click', async () => {
+      const params = new URLSearchParams({
+        value: document.getElementById('tryte9-value').value,
+        opcode: document.getElementById('tryte9-opcode').value,
+        u: document.getElementById('tryte9-u').value,
+        v: document.getElementById('tryte9-v').value,
+        w: document.getElementById('tryte9-w').value,
+        bypass: document.getElementById('tryte9-bypass').checked
+      });
+      try {
+        const data = await fetchSetun(`/api/tryte9/evaluate?${params}`);
+        const gate = data.prefilter.bypassed ? 'BYPASSED' : (data.prefilter.passed ? 'PASS' : 'FAIL → MUTE/RESET');
+        tryte9Output.innerHTML = `
+          <div class="setun-result-block">
+            <span>${data.action}</span>
+            <p><strong>Control word:</strong> ${data.packedHex} &nbsp; <strong>Opcode:</strong> ${data.opcodeBits}</p>
+            <p><strong>Value:</strong> ${data.value} &nbsp; <strong>Rank:</strong> ${data.rank}</p>
+            <p><strong>Trits:</strong> ${data.tritLabel}</p>
+            <p><strong>Prefilter:</strong> ${gate} &nbsp; <strong>Sum:</strong> ${data.prefilter.sum}</p>
+          </div>`;
+      } catch (err) {
+        tryte9Output.innerHTML = '<span>Tryte9 error</span><p>Check the signed value, opcode, and trit inputs.</p>';
       }
     });
   </script>
