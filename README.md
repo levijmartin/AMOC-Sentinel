@@ -56,6 +56,7 @@ This repository is set up to help turn an idea into a submission-ready project w
 - `docs/FULL_SYSTEM_DIAGRAM.md` - full future-state Mermaid system diagram
 - `docs/SCOPE_BOUNDARY.md` - explicit note on MVP scope vs future-state scope
 - `docs/ADVANCED_TELEMETRY_CONCEPTS.md` - consolidated research note on future telemetry, tokenization, and packetization ideas
+- `docs/SAEONYX_INTEGRATION_NOTES.md` - evidence-scoped patterns, safeguards, and acceptance gates derived from the SAEONYX monograph
 - `docs/` - place for architecture, pitch, and research notes
 
 ## Apps
