@@ -57,6 +57,7 @@ This repository is set up to help turn an idea into a submission-ready project w
 - `docs/SCOPE_BOUNDARY.md` - explicit note on MVP scope vs future-state scope
 - `docs/ADVANCED_TELEMETRY_CONCEPTS.md` - consolidated research note on future telemetry, tokenization, and packetization ideas
 - `docs/SAEONYX_INTEGRATION_NOTES.md` - evidence-scoped patterns, safeguards, and acceptance gates derived from the SAEONYX monograph
+- `docs/SAEONYX_GSL_PACKAGE_REVIEW.md` - archive hash, licensing boundary, excluded risks, and clean-room Great Salt Lake integration record
 - `docs/` - place for architecture, pitch, and research notes
 
 ## Apps

@@ -8,6 +8,7 @@ Runnable FastAPI prototype for a Caribbean ocean coordination agent using live N
 - derives NORMAL / WATCH / ALERT / ESCALATE decisions
 - serves a small Leaflet dashboard and JSON endpoints
 - persists decisions, actions, and subscribers to SQLite
+- exposes an independent prototype Great Salt Lake profile backed by public USGS NWIS observations
 
 ## Run
 
@@ -22,6 +23,13 @@ Then open:
 ```text
 http://localhost:7735
 ```
+
+## Regional profile endpoints
+
+- `GET /regions/great-salt-lake` — profile metadata, public sites, and supported parameters
+- `GET /regions/great-salt-lake/status` — current normalized USGS snapshot and provenance digest
+
+The Great Salt Lake profile keeps USGS gage height separate from absolute water-surface elevation, never fills missing measurements with synthetic values, and labels its output `prototype`. Set `GSL_ANALYSIS_REFERENCE_ELEVATION_FT` only when an analytical comparison reference is desired; it is not treated as a sensor reading or hazard threshold.
 
 ## Config
 Set environment variables as needed:

@@ -8,6 +8,7 @@ The geometric state is the risk signal. The agent is the coordination layer.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import os
@@ -27,6 +28,8 @@ import uvicorn
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
+
+from great_salt_lake import GreatSaltLakeProfile
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 log = logging.getLogger("saeonyx.caribbean")
@@ -736,6 +739,7 @@ app = FastAPI(
     description="Regional real-time safety and coordination infrastructure for the Caribbean. Substrate-driven. Real NOAA only.",
 )
 agent = CaribbeanOceanAgent()
+gsl_profile = GreatSaltLakeProfile()
 dbm = DatabaseManager(Config.DATABASE_URL)
 
 
@@ -946,7 +950,24 @@ async def health() -> Dict[str, Any]:
         "latest_level": agent.latest_decision.level.value if agent.latest_decision else None,
         "live_stations": agent.latest_decision.live_station_count if agent.latest_decision else 0,
         "subscribers": len(agent.subscribers),
+        "regional_profiles": ["caribbean", "great-salt-lake"],
     }
+
+
+@app.get("/regions/great-salt-lake")
+async def great_salt_lake_metadata() -> Dict[str, Any]:
+    """Describe the independent USGS-backed regional profile without fetching data."""
+    return gsl_profile.metadata()
+
+
+@app.get("/regions/great-salt-lake/status")
+async def great_salt_lake_status() -> Dict[str, Any]:
+    """Fetch and normalize current public USGS observations."""
+    try:
+        return await asyncio.to_thread(gsl_profile.snapshot)
+    except Exception as exc:
+        log.warning("Great Salt Lake profile fetch failed: %s", exc)
+        raise HTTPException(status_code=503, detail=f"Great Salt Lake source unavailable: {exc}")
 
 
 @app.get("/admin/status")
