@@ -37,6 +37,7 @@ The minimum does not include production FPGA/ASIC RTL, live OPX/Qblox hardware c
 | 2026-09-23 00:16 | Baseline and planning | n/a | n/a | n/a | 5h 87% left; week 78% left |
 | 2026-09-23 00:21 | Tryte9 visual-spec intake | n/a | n/a | n/a | 5h 84% left; week 78% left |
 | 2026-09-23 00:32 | Tryte9 minimum demo implementation | n/a | n/a | n/a | 5h 62% left; week 74% left; tests/build/live API verified; local commit `73aa051` |
+| 2026-09-24 12:33 | Great Salt Lake Sentinel integration assessment | n/a | n/a | n/a | 5h 95% left; week 66% left; architecture/security review only; no runtime code added |
 
 ## Token-control rules
 
