@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="AMOC Sentinel GAO Core prototype briefing for scientific and public-sector review." />
+  <title>{{.Title}}</title>
+  <link rel="stylesheet" href="/static/gao-briefing.css" />
+</head>
+<body>
+  <div class="grid" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="/"><span>AS</span><div><strong>AMOC Sentinel</strong><small>GAO prototype briefing</small></div></a>
+    <nav aria-label="Briefing sections">
+      <a href="#architecture">Architecture</a><a href="#evidence">Evidence</a><a href="#pilot">Pilot</a><a class="return" href="/">← Dashboard</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="classification"><i></i> Research prototype · technical discussion draft</div>
+        <h1>Transparent environmental data fusion for testable AMOC indicators</h1>
+        <p class="lead">AMOC Sentinel is a software prototype for exploring how public Earth-observation metadata, coastal observations, and explicit uncertainty labels can move through a reproducible analysis pipeline.</p>
+        <div class="hero-actions"><a href="#pilot" class="primary">Review pilot proposal</a><a href="#evidence" class="secondary">Inspect evidence status</a></div>
+        <div class="boundary"><strong>Scope boundary</strong><span>This module is not an operational forecast system, has not been evaluated or endorsed by NOAA or NASA, and does not demonstrate quantum hardware, non-local communication, or validated physical SBH effects.</span></div>
+      </div>
+      <figure class="architecture-art">
+        <img src="/static/gao-core-concept.jpg" alt="Concept diagram of the AMOC Sentinel GAO Core arranged as eleven software research layers" />
+        <figcaption>Concept artwork. Layer names describe a research roadmap, not verified physical capabilities.</figcaption>
+      </figure>
+    </section>
+
+    <section class="status-strip" aria-label="Prototype status summary">
+      <div><span class="status implemented">Implemented</span><strong>Go web service</strong><small>Forecast UI, Setun/Tryte9 software reference paths, location globe</small></div>
+      <div><span class="status public">Public data plan</span><strong>Agency adapters</strong><small>NASA CMR metadata, NOAA NEXRAD and CO-OPS interfaces proposed</small></div>
+      <div><span class="status simulated">Simulated</span><strong>Fusion scenarios</strong><small>Synthetic values for interface and encoding demonstrations</small></div>
+      <div><span class="status hypothesis">Hypothesis</span><strong>GAO / SBH concepts</strong><small>Unvalidated research terminology requiring measurable definitions</small></div>
+    </section>
+
+    <section id="architecture" class="section">
+      <div class="section-heading"><div><span>Review architecture</span><h2>Separate acquisition, transformation, and interpretation</h2></div><p>The proposed design keeps source records intact and prevents experimental encodings from being confused with agency products.</p></div>
+      <div class="flow">
+        <article><b>01</b><span>Acquire</span><h3>Source adapters</h3><p>Retrieve metadata or observations from documented public endpoints with timestamps, identifiers, and source URLs.</p><ul><li>NASA CMR granule metadata</li><li>NOAA NEXRAD product access</li><li>NOAA CO-OPS station observations</li></ul></article>
+        <div class="arrow">→</div>
+        <article><b>02</b><span>Normalize</span><h3>Typed records</h3><p>Preserve units, quality flags, spatial bounds, latency, and provenance before any experimental transformation.</p><ul><li>Schema validation</li><li>Unit normalization</li><li>Quality-control flags</li></ul></article>
+        <div class="arrow">→</div>
+        <article><b>03</b><span>Experiment</span><h3>Setun encoding</h3><p>Map bounded scalar values into balanced-ternary software words for comparison with conventional representations.</p><ul><li>Deterministic conversion</li><li>Round-trip tests</li><li>No hardware-performance claim</li></ul></article>
+        <div class="arrow">→</div>
+        <article><b>04</b><span>Evaluate</span><h3>Traceable outputs</h3><p>Compare error, latency, storage, and decision usefulness against a binary baseline with reproducible notebooks or reports.</p><ul><li>Baseline comparison</li><li>Uncertainty disclosure</li><li>Exportable audit trail</li></ul></article>
+      </div>
+    </section>
+
+    <section id="evidence" class="section evidence-section">
+      <div class="section-heading"><div><span>Evidence ledger</span><h2>What exists today—and what does not</h2></div><p>A representative should be able to distinguish working software from planned integrations and speculative research at a glance.</p></div>
+      <div class="evidence-table" role="table" aria-label="Capability evidence matrix">
+        <div class="table-row header" role="row"><span>Capability</span><span>Status</span><span>Current evidence</span><span>Next proof</span></div>
+        <div class="table-row" role="row"><strong>AMOC web interface</strong><span><i class="dot implemented"></i>Implemented</span><span>Runnable Go service and HTTP routes</span><span>Usability review and deployment record</span></div>
+        <div class="table-row" role="row"><strong>Balanced-ternary encoding</strong><span><i class="dot implemented"></i>Implemented</span><span>Software encode/add and Tryte9 evaluation endpoints</span><span>Benchmarks against binary baselines</span></div>
+        <div class="table-row" role="row"><strong>NASA CMR discovery</strong><span><i class="dot public"></i>Planned adapter</span><span>Public API identified; no production ingestion in this module</span><span>Collection validation and cached metadata demo</span></div>
+        <div class="table-row" role="row"><strong>NOAA radar and water levels</strong><span><i class="dot public"></i>Planned adapter</span><span>NEXRAD and CO-OPS named as candidate sources</span><span>Choose products, stations, latency, and QC rules</span></div>
+        <div class="table-row" role="row"><strong>Sensor fusion</strong><span><i class="dot simulated"></i>Simulation only</span><span>Synthetic interface scenarios</span><span>Back-test with historical agency data</span></div>
+        <div class="table-row" role="row"><strong>Quantum / non-local layers</strong><span><i class="dot hypothesis"></i>Unvalidated</span><span>Concept artwork and terminology only</span><span>Define falsifiable measurements before implementation</span></div>
+      </div>
+    </section>
+
+    <section class="section demo-section">
+      <div class="section-heading"><div><span>Software demonstration</span><h2>Balanced-ternary transformation—not a new sensor</h2></div><p>The interactive calculation calls AMOC’s existing Setun API. It demonstrates encoding behavior only.</p></div>
+      <div class="demo-grid">
+        <div class="demo-console">
+          <label for="demo-value">Normalized scalar input <small>−0.5 to +0.5</small></label>
+          <input id="demo-value" type="number" min="-0.5" max="0.5" step="0.0001" value="0.082" />
+          <button id="encode-button" type="button">Encode software word</button>
+        </div>
+        <div id="demo-output" class="demo-output"><span>Ready</span><strong>Run the reference encoder</strong><code>API: /api/setun/encode</code></div>
+        <div class="interpretation"><span>Interpretation rule</span><p>The output is a deterministic representation of the supplied number. It is not a satellite measurement, NOAA product, quantum state, or evidence of improved forecasting skill.</p></div>
+      </div>
+    </section>
+
+    <section id="pilot" class="section pilot-section">
+      <div class="pilot-copy"><span>Low-risk collaboration proposal</span><h2>A 30-day historical-data pilot</h2><p>Use one bounded coastal question and archived public records to test whether the prototype adds measurable value without touching operational systems.</p></div>
+      <ol>
+        <li><b>Week 1</b><strong>Define the question</strong><span>Select one region, outcome, source products, baseline, and acceptance criteria with a domain reviewer.</span></li>
+        <li><b>Week 2</b><strong>Build traceable adapters</strong><span>Cache source responses, retain identifiers and quality flags, and document transformations.</span></li>
+        <li><b>Week 3</b><strong>Run the comparison</strong><span>Evaluate conventional and balanced-ternary representations on identical historical inputs.</span></li>
+        <li><b>Week 4</b><strong>Report honestly</strong><span>Publish accuracy, latency, failure cases, reproducibility notes, and a go/no-go recommendation.</span></li>
+      </ol>
+    </section>
+
+    <section class="review-questions">
+      <div><span>Questions for a technical reviewer</span><h2>Where expert feedback matters most</h2></div>
+      <ul><li>Which public products and quality flags best fit a bounded AMOC/coastal test?</li><li>What latency and spatial resolution would make a prototype comparison meaningful?</li><li>Which baseline model or workflow should the experiment avoid duplicating?</li><li>What evidence threshold should be met before discussing operational relevance?</li></ul>
+    </section>
+  </main>
+
+  <footer><span>AMOC Sentinel GAO Core · independent research prototype</span><span>NOAA and NASA names identify public data sources only; no endorsement is implied.</span><a href="/">Return to dashboard</a></footer>
+
+  <script>
+    const button = document.getElementById('encode-button');
+    const input = document.getElementById('demo-value');
+    const output = document.getElementById('demo-output');
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      output.innerHTML = '<span>Processing</span><strong>Calling the local reference encoder…</strong>';
+      try {
+        const response = await fetch(`/api/setun/encode?value=${encodeURIComponent(input.value)}`);
+        if (!response.ok) throw new Error('request failed');
+        const data = await response.json();
+        output.innerHTML = `<span>Software reference result</span><strong>${data.hex} · ${data.flag}</strong><code>${data.tritLabel}</code><small>Decoded value: ${data.value}</small>`;
+      } catch (error) {
+        output.innerHTML = '<span>Unavailable</span><strong>The reference endpoint could not be reached.</strong>';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
