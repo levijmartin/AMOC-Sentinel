@@ -197,18 +197,28 @@
 
       <div class="risk-pill-row">
         <span class="risk-pill neutral">Condition: {{.Forecast.Condition}}</span>
-        <span class="risk-pill {{if eq .Forecast.MarineHeatRisk "Elevated"}}high{{else if eq .Forecast.MarineHeatRisk "Moderate"}}medium{{else}}low{{end}}">Marine Heat: {{.Forecast.MarineHeatRisk}}</span>
-        <span class="risk-pill {{if eq .Forecast.CoastalFloodRisk "Elevated"}}high{{else if eq .Forecast.CoastalFloodRisk "Moderate"}}medium{{else}}low{{end}}">Coastal Flood: {{.Forecast.CoastalFloodRisk}}</span>
-        <span class="risk-pill neutral">Risk Score: {{.Forecast.RiskScore}}</span>
+        <span class="risk-pill neutral">Data: {{.Forecast.WeatherDataKind}}</span>
+        <span class="risk-pill {{if eq .Forecast.CoastalFloodRisk "Elevated"}}high{{else if eq .Forecast.CoastalFloodRisk "Moderate"}}medium{{else}}low{{end}}">Coastal Screening: {{.Forecast.CoastalFloodRisk}}</span>
+        <span class="risk-pill neutral">Source: {{.Forecast.WeatherSource}}</span>
       </div>
 
       <div class="result-grid">
         <div class="metric"><span>Date</span><strong>{{.Forecast.Date}}</strong></div>
-        <div class="metric"><span>Temperature</span><strong>{{.Forecast.TemperatureC}}°C</strong></div>
-        <div class="metric"><span>Wind</span><strong>{{.Forecast.WindKph}} kph</strong></div>
+        <div class="metric"><span>Mean Temperature</span><strong>{{.Forecast.TemperatureC}}°C</strong></div>
+        <div class="metric"><span>Daily Range</span><strong>{{printf "%.1f" .Forecast.TemperatureMinC}}–{{printf "%.1f" .Forecast.TemperatureMaxC}}°C</strong></div>
+        <div class="metric"><span>Maximum Wind</span><strong>{{.Forecast.WindKph}} kph</strong></div>
+        {{if eq .Forecast.WeatherDataKind "historical"}}
+        <div class="metric"><span>Precipitation</span><strong>{{printf "%.1f" .Forecast.PrecipitationMM}} mm</strong></div>
+        {{else}}
         <div class="metric"><span>Rain Chance</span><strong>{{.Forecast.RainChance}}%</strong></div>
+        <div class="metric"><span>Forecast Precipitation</span><strong>{{printf "%.1f" .Forecast.PrecipitationMM}} mm</strong></div>
+        {{end}}
         <div class="metric"><span>Marine Heat Risk</span><strong>{{.Forecast.MarineHeatRisk}}</strong></div>
-        <div class="metric"><span>Coastal Flood Risk</span><strong>{{.Forecast.CoastalFloodRisk}}</strong></div>
+        <div class="metric"><span>Screening Score</span><strong>{{.Forecast.RiskScore}}</strong></div>
+      </div>
+      <div class="summary-block compact prose-block">
+        <span>Canonical query record</span>
+        <p>{{.Forecast.WeatherSource}} · {{.Forecast.WeatherDataKind}} · {{.Forecast.WeatherTimezone}} · {{printf "%.4f" .Forecast.Latitude}}, {{printf "%.4f" .Forecast.Longitude}}</p>
       </div>
       <div class="summary-block primary-callout">
         <span>Summary</span>

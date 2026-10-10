@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"log"
 	"math"
-	"math/rand"
 	"net/http"
 	"os"
 	"strconv"
@@ -20,8 +19,11 @@ type Forecast struct {
 	Date                 string                 `json:"date"`
 	Condition            string                 `json:"condition"`
 	TemperatureC         int                    `json:"temperatureC"`
+	TemperatureMinC      float64                `json:"temperatureMinC,omitempty"`
+	TemperatureMaxC      float64                `json:"temperatureMaxC,omitempty"`
 	WindKph              int                    `json:"windKph"`
-	RainChance           int                    `json:"rainChance"`
+	RainChance           int                    `json:"rainChance,omitempty"`
+	PrecipitationMM      float64                `json:"precipitationMM"`
 	MarineHeatRisk       string                 `json:"marineHeatRisk"`
 	CoastalFloodRisk     string                 `json:"coastalFloodRisk"`
 	RiskScore            float64                `json:"riskScore"`
@@ -33,6 +35,10 @@ type Forecast struct {
 	Longitude            float64                `json:"longitude,omitempty"`
 	CoordinatesAvailable bool                   `json:"coordinatesAvailable"`
 	CoordinateLabel      string                 `json:"coordinateLabel,omitempty"`
+	WeatherSource        string                 `json:"weatherSource,omitempty"`
+	WeatherSourceURL     string                 `json:"weatherSourceUrl,omitempty"`
+	WeatherDataKind      string                 `json:"weatherDataKind,omitempty"`
+	WeatherTimezone      string                 `json:"weatherTimezone,omitempty"`
 }
 
 type PageData struct {
@@ -148,8 +154,11 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	forecast := generateForecast(location, region, date, false)
-	hydrateForecastCoordinates(&forecast)
+	forecast, err := buildWeatherForecast(r.Context(), location, region, date, false)
+	if err != nil {
+		renderPage(w, PageData{Title: "AMOC Sentinel Forecast Service", Error: err.Error()})
+		return
+	}
 	hydrateForecastMemory(r, &forecast)
 	renderPage(w, PageData{Title: "AMOC Sentinel Forecast Service", Forecast: &forecast})
 }
@@ -164,8 +173,12 @@ func handleForecastAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	forecast := generateForecast(location, region, date, false)
-	hydrateForecastCoordinates(&forecast)
+	forecast, err := buildWeatherForecast(r.Context(), location, region, date, false)
+	if err != nil {
+		w.WriteHeader(http.StatusBadGateway)
+		writeJSON(w, map[string]string{"error": err.Error()})
+		return
+	}
 	hydrateForecastMemory(r, &forecast)
 	writeJSON(w, forecast)
 }
@@ -190,8 +203,12 @@ func handlePremiumForecastAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	forecast := generateForecast(location, region, date, true)
-	hydrateForecastCoordinates(&forecast)
+	forecast, err := buildWeatherForecast(r.Context(), location, region, date, true)
+	if err != nil {
+		w.WriteHeader(http.StatusBadGateway)
+		writeJSON(w, map[string]string{"error": err.Error()})
+		return
+	}
 	hydrateForecastMemory(r, &forecast)
 	writeJSON(w, forecast)
 }
@@ -300,53 +317,6 @@ func buildSetunPayload(engine TritEngine9, input float64) SetunPayload {
 		Trits:     tritInts,
 		TritLabel: strings.Join(parts, " "),
 	}
-}
-
-func generateForecast(location, region, date string, premium bool) Forecast {
-	seed := int64(len(location) + len(region) + len(date))
-	for _, c := range location + region + date {
-		seed += int64(c)
-	}
-	r := rand.New(rand.NewSource(seed))
-
-	conditions := []string{"Partly cloudy", "Scattered showers", "Sunny intervals", "Windy with showers", "Humid with thunderstorms"}
-	marineRisks := []string{"Low", "Moderate", "Elevated"}
-	coastalRisks := []string{"Low", "Moderate", "Elevated"}
-
-	temp := 27 + r.Intn(7)
-	wind := 12 + r.Intn(28)
-	rain := 10 + r.Intn(80)
-	marine := marineRisks[r.Intn(len(marineRisks))]
-	coastal := coastalRisks[r.Intn(len(coastalRisks))]
-	riskScore := float64((rain+wind)/2) / 10.0
-	if marine == "Elevated" {
-		riskScore += 1.2
-	}
-	if coastal == "Elevated" {
-		riskScore += 1.2
-	}
-
-	summary := fmt.Sprintf("%s on %s is expected to see %s conditions with %d%% rain chance and winds near %d kph.", location, date, strings.ToLower(conditions[r.Intn(len(conditions))]), rain, wind)
-
-	forecast := Forecast{
-		Location:         location,
-		Region:           region,
-		Date:             date,
-		Condition:        conditions[r.Intn(len(conditions))],
-		TemperatureC:     temp,
-		WindKph:          wind,
-		RainChance:       rain,
-		MarineHeatRisk:   marine,
-		CoastalFloodRisk: coastal,
-		RiskScore:        round(riskScore, 1),
-		Summary:          summary,
-	}
-
-	if premium {
-		forecast.PremiumAdvisory = premiumAdvice(forecast)
-	}
-
-	return forecast
 }
 
 func hydrateForecastMemory(r *http.Request, forecast *Forecast) {
