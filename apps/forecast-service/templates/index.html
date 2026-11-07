@@ -275,6 +275,10 @@
 
   <script>
     const globeCanvas = document.getElementById('location-globe');
+    const reduceGlobeMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let globeWorldCache = null;
+    let globeLastDraw = 0;
+    let globeRenderPending = false;
 
     function projectGlobePoint(longitude, latitude, centerLongitude, centerLatitude, radius, centerX, centerY) {
       const radians = Math.PI / 180;
@@ -352,7 +356,7 @@
       }
     }
 
-    async function renderLocationGlobe() {
+    async function renderLocationGlobe(animationTime = performance.now()) {
       if (!globeCanvas) return;
       const context = globeCanvas.getContext('2d');
       const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
@@ -361,9 +365,14 @@
       globeCanvas.height = displaySize * pixelRatio;
       context.scale(pixelRatio, pixelRatio);
 
-      const centerLongitude = Number(globeCanvas.dataset.longitude);
-      const centerLatitude = Number(globeCanvas.dataset.latitude);
+      const baseLongitude = Number(globeCanvas.dataset.longitude);
+      const baseLatitude = Number(globeCanvas.dataset.latitude);
       const hasLocation = globeCanvas.dataset.hasLocation === 'true';
+      const motionTime = reduceGlobeMotion ? 0 : animationTime;
+      const centerLongitude = hasLocation
+        ? baseLongitude + Math.sin(motionTime / 2800) * 5
+        : baseLongitude + (motionTime / 180) % 360;
+      const centerLatitude = baseLatitude + (reduceGlobeMotion ? 0 : Math.sin(motionTime / 3600) * (hasLocation ? 1.2 : 2));
       const centerX = displaySize / 2;
       const centerY = displaySize / 2;
       const radius = displaySize * 0.43;
@@ -393,8 +402,11 @@
       drawGlobeGrid(context, centerLongitude, centerLatitude, radius, centerX, centerY);
 
       try {
-        const response = await fetch('/static/ne_110m_land.geojson');
-        const world = await response.json();
+        if (!globeWorldCache) {
+          const response = await fetch('/static/ne_110m_land.geojson');
+          globeWorldCache = await response.json();
+        }
+        const world = globeWorldCache;
         context.fillStyle = 'rgba(33, 202, 195, 0.22)';
         context.strokeStyle = 'rgba(151, 255, 241, 0.9)';
         context.shadowColor = 'rgba(58, 244, 255, 0.72)';
@@ -442,25 +454,37 @@
       context.restore();
 
       if (hasLocation) {
+        const target = projectGlobePoint(baseLongitude, baseLatitude, centerLongitude, centerLatitude, radius, centerX, centerY);
         context.beginPath();
-        context.arc(centerX, centerY, 7, 0, Math.PI * 2);
+        context.arc(target.x, target.y, 7, 0, Math.PI * 2);
         context.fillStyle = '#ffcf70';
         context.shadowColor = '#ffcf70';
         context.shadowBlur = 22;
         context.fill();
         context.shadowBlur = 0;
         context.beginPath();
-        context.arc(centerX, centerY, 16, 0, Math.PI * 2);
+        context.arc(target.x, target.y, 16, 0, Math.PI * 2);
         context.strokeStyle = 'rgba(255, 207, 112, 0.72)';
         context.lineWidth = 1.5;
         context.stroke();
       }
     }
 
-    renderLocationGlobe();
+    function animateLocationGlobe(timestamp) {
+      if (timestamp - globeLastDraw >= 70 && !globeRenderPending) {
+        globeLastDraw = timestamp;
+        globeRenderPending = true;
+        renderLocationGlobe(timestamp).finally(() => { globeRenderPending = false; });
+      }
+      window.requestAnimationFrame(animateLocationGlobe);
+    }
+
+    renderLocationGlobe(0).finally(() => {
+      if (!reduceGlobeMotion) window.requestAnimationFrame(animateLocationGlobe);
+    });
     window.addEventListener('resize', () => {
       window.clearTimeout(window.locationGlobeResizeTimer);
-      window.locationGlobeResizeTimer = window.setTimeout(renderLocationGlobe, 120);
+      window.locationGlobeResizeTimer = window.setTimeout(() => renderLocationGlobe(performance.now()), 120);
     });
 
     const setunOutput = document.getElementById('setun-output');
