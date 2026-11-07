@@ -94,6 +94,10 @@
         <code>Atlantic overview</code>
         {{end}}
       </div>
+      <div class="holo-layer-toggle" role="group" aria-label="Conceptual holographic layer">
+        <button type="button" class="active" data-holo-layer="thermohaline" aria-pressed="true">Thermohaline</button>
+        <button type="button" data-holo-layer="dust" aria-pressed="false">Dust</button>
+      </div>
       <div class="holo-technical-status" role="note">
         <span>FOUNDING OBSERVATORY PREVIEW</span>
         <p>WGS84 oblique display projection · Natural Earth reference boundaries · Open-Meteo weather source · animated current field is conceptual, not observed terrain</p>
@@ -279,6 +283,7 @@
     let globeWorldCache = null;
     let globeLastDraw = 0;
     let globeRenderPending = false;
+    let activeHoloLayer = 'thermohaline';
 
     function projectGlobePoint(longitude, latitude, centerLongitude, centerLatitude, radius, centerX, centerY) {
       const radians = Math.PI / 180;
@@ -359,7 +364,12 @@
 
     function drawHolographicFlowField(context, centerX, centerY, radius, animationTime) {
       const pulse = (Math.sin(animationTime / 850) + 1) / 2;
-      const fields = [
+      const dustLayer = activeHoloLayer === 'dust';
+      const fields = dustLayer ? [
+        [-0.58, -0.12, 0.34, 'rgba(255, 170, 0, 0.5)'],
+        [-0.18, 0.04, 0.3, 'rgba(255, 73, 95, 0.4)'],
+        [0.28, 0.13, 0.3, 'rgba(255, 210, 56, 0.38)']
+      ] : [
         [-0.54, 0.08, 0.3, 'rgba(0, 232, 255, 0.46)'],
         [-0.18, -0.18, 0.28, 'rgba(53, 255, 191, 0.42)'],
         [0.2, 0.08, 0.31, 'rgba(198, 255, 64, 0.36)'],
@@ -396,9 +406,9 @@
           radius * 0.28, offset + radius * 0.24,
           radius * 0.86, offset - radius * 0.08
         );
-        context.strokeStyle = band % 2
-          ? 'rgba(72, 255, 205, 0.16)'
-          : 'rgba(56, 224, 255, 0.2)';
+        context.strokeStyle = dustLayer
+          ? (band % 2 ? 'rgba(255, 171, 48, 0.18)' : 'rgba(255, 71, 91, 0.2)')
+          : (band % 2 ? 'rgba(72, 255, 205, 0.16)' : 'rgba(56, 224, 255, 0.2)');
         context.lineWidth = 1 + pulse * 0.6;
         context.stroke();
       }
@@ -411,7 +421,11 @@
       context.fillStyle = 'rgba(188, 255, 246, 0.84)';
       context.strokeStyle = 'rgba(111, 244, 255, 0.42)';
       context.lineWidth = 1;
-      const labels = [
+      const labels = activeHoloLayer === 'dust' ? [
+        ['SAHARAN DUST', 0.18, -0.3, 0.72],
+        ['ATLANTIC PLUME', -0.42, -0.02, -0.84],
+        ['CARIBBEAN', -0.22, 0.3, -0.62]
+      ] : [
         ['NORTH ATLANTIC', -0.2, -0.34, 0.22],
         ['GULF STREAM', -0.5, -0.02, -0.83],
         ['CARIBBEAN', -0.22, 0.3, -0.62]
@@ -558,6 +572,18 @@
       }
       window.requestAnimationFrame(animateLocationGlobe);
     }
+
+    document.querySelectorAll('[data-holo-layer]').forEach((button) => {
+      button.addEventListener('click', () => {
+        activeHoloLayer = button.dataset.holoLayer;
+        document.querySelectorAll('[data-holo-layer]').forEach((item) => {
+          const active = item === button;
+          item.classList.toggle('active', active);
+          item.setAttribute('aria-pressed', String(active));
+        });
+        renderLocationGlobe(performance.now());
+      });
+    });
 
     renderLocationGlobe(0).finally(() => {
       if (!reduceGlobeMotion) window.requestAnimationFrame(animateLocationGlobe);

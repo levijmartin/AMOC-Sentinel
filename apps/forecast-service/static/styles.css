@@ -535,6 +535,32 @@ label span,
   font-size: 0.76rem;
 }
 
+.holo-layer-toggle {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  width: min(100%, 520px);
+  margin-top: 10px;
+}
+
+.holo-layer-toggle button {
+  padding: 7px 14px;
+  border: 1px solid rgba(122, 243, 255, 0.3);
+  background: rgba(3, 18, 27, 0.78);
+  color: rgba(188, 234, 240, 0.72);
+  font: 800 0.62rem ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.holo-layer-toggle button.active {
+  border-color: rgba(122, 243, 255, 0.8);
+  background: rgba(20, 133, 151, 0.32);
+  color: #bffff8;
+  box-shadow: 0 0 14px rgba(58, 244, 255, 0.18);
+}
+
 .holo-technical-status {
   width: min(100%, 520px);
   margin-top: 10px;
