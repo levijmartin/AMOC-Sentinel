@@ -89,14 +89,14 @@
         <strong>{{.Forecast.Location}}{{if .Forecast.Region}}, {{.Forecast.Region}}{{end}}</strong>
         <code>Atlantic fallback view</code>
         {{else}}
-        <span>LOCATION GLOBE</span>
+        <span>ATLANTIC HOLOGRAPHIC TABLE</span>
         <strong>Run a forecast to center the search area</strong>
         <code>Atlantic overview</code>
         {{end}}
       </div>
       <div class="holo-technical-status" role="note">
         <span>FOUNDING OBSERVATORY PREVIEW</span>
-        <p>WGS84 display projection · Natural Earth reference boundaries · Open-Meteo weather source · interactive streaming layers planned</p>
+        <p>WGS84 oblique display projection · Natural Earth reference boundaries · Open-Meteo weather source · animated current field is conceptual, not observed terrain</p>
       </div>
     </section>
 
@@ -288,10 +288,11 @@
       const phi0 = centerLatitude * radians;
       const delta = lambda - lambda0;
       const visibility = Math.sin(phi0) * Math.sin(phi) + Math.cos(phi0) * Math.cos(phi) * Math.cos(delta);
+      const projectedY = centerY - radius * (Math.cos(phi0) * Math.sin(phi) - Math.sin(phi0) * Math.cos(phi) * Math.cos(delta));
       return {
         visible: visibility >= 0,
         x: centerX + radius * Math.cos(phi) * Math.sin(delta),
-        y: centerY - radius * (Math.cos(phi0) * Math.sin(phi) - Math.sin(phi0) * Math.cos(phi) * Math.cos(delta))
+        y: centerY + (projectedY - centerY) * 0.63
       };
     }
 
@@ -356,6 +357,81 @@
       }
     }
 
+    function drawHolographicFlowField(context, centerX, centerY, radius, animationTime) {
+      const pulse = (Math.sin(animationTime / 850) + 1) / 2;
+      const fields = [
+        [-0.54, 0.08, 0.3, 'rgba(0, 232, 255, 0.46)'],
+        [-0.18, -0.18, 0.28, 'rgba(53, 255, 191, 0.42)'],
+        [0.2, 0.08, 0.31, 'rgba(198, 255, 64, 0.36)'],
+        [0.48, -0.14, 0.25, 'rgba(255, 196, 55, 0.31)'],
+        [0.02, 0.3, 0.25, 'rgba(0, 190, 255, 0.38)']
+      ];
+
+      context.save();
+      context.translate(centerX, centerY);
+      context.scale(1, 0.63);
+      context.globalCompositeOperation = 'screen';
+      fields.forEach(([x, y, size, color], index) => {
+        const driftX = Math.sin(animationTime / 1600 + index * 1.7) * radius * 0.035;
+        const driftY = Math.cos(animationTime / 1900 + index) * radius * 0.025;
+        const gradient = context.createRadialGradient(
+          radius * x + driftX, radius * y + driftY, radius * 0.02,
+          radius * x + driftX, radius * y + driftY, radius * size * (0.9 + pulse * 0.12)
+        );
+        gradient.addColorStop(0, color);
+        gradient.addColorStop(0.52, color.replace(/0\.\d+\)/, '0.12)'));
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        context.fillStyle = gradient;
+        context.beginPath();
+        context.arc(radius * x + driftX, radius * y + driftY, radius * size, 0, Math.PI * 2);
+        context.fill();
+      });
+
+      for (let band = 0; band < 6; band += 1) {
+        const offset = (band - 2.5) * radius * 0.1;
+        context.beginPath();
+        context.moveTo(-radius * 0.84, offset + Math.sin(animationTime / 650 + band) * 8);
+        context.bezierCurveTo(
+          -radius * 0.35, offset - radius * 0.24,
+          radius * 0.28, offset + radius * 0.24,
+          radius * 0.86, offset - radius * 0.08
+        );
+        context.strokeStyle = band % 2
+          ? 'rgba(72, 255, 205, 0.16)'
+          : 'rgba(56, 224, 255, 0.2)';
+        context.lineWidth = 1 + pulse * 0.6;
+        context.stroke();
+      }
+      context.restore();
+    }
+
+    function drawHolographicLabels(context, centerX, centerY, radius, hasLocation) {
+      context.save();
+      context.font = '600 9px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+      context.fillStyle = 'rgba(188, 255, 246, 0.84)';
+      context.strokeStyle = 'rgba(111, 244, 255, 0.42)';
+      context.lineWidth = 1;
+      const labels = [
+        ['NORTH ATLANTIC', -0.2, -0.34, 0.22],
+        ['GULF STREAM', -0.5, -0.02, -0.83],
+        ['CARIBBEAN', -0.22, 0.3, -0.62]
+      ];
+      labels.forEach(([label, x, y, lineEnd]) => {
+        const px = centerX + radius * x;
+        const py = centerY + radius * y;
+        context.beginPath();
+        context.moveTo(px, py);
+        context.lineTo(centerX + radius * lineEnd, py);
+        context.stroke();
+        context.fillText(label, px + 5, py - 4);
+      });
+      if (hasLocation) {
+        context.fillStyle = 'rgba(255, 211, 102, 0.92)';
+        context.fillText('SEARCH TARGET', centerX + 20, centerY - 12);
+      }
+      context.restore();
+    }
+
     async function renderLocationGlobe(animationTime = performance.now()) {
       if (!globeCanvas) return;
       const context = globeCanvas.getContext('2d');
@@ -391,12 +467,12 @@
       ocean.addColorStop(0.58, 'rgba(4, 44, 64, 0.74)');
       ocean.addColorStop(1, 'rgba(0, 10, 19, 0.9)');
       context.beginPath();
-      context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      context.ellipse(centerX, centerY, radius, radius * 0.63, 0, 0, Math.PI * 2);
       context.fillStyle = ocean;
       context.fill();
       context.save();
       context.beginPath();
-      context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      context.ellipse(centerX, centerY, radius, radius * 0.63, 0, 0, Math.PI * 2);
       context.clip();
 
       drawGlobeGrid(context, centerLongitude, centerLatitude, radius, centerX, centerY);
@@ -425,6 +501,8 @@
         context.fillRect(0, 0, displaySize, displaySize);
       }
 
+      drawHolographicFlowField(context, centerX, centerY, radius, motionTime);
+
       const scanGradient = context.createLinearGradient(0, centerY - radius, 0, centerY + radius);
       scanGradient.addColorStop(0, 'rgba(118, 249, 255, 0)');
       scanGradient.addColorStop(0.48, 'rgba(118, 249, 255, 0.015)');
@@ -436,7 +514,7 @@
       context.restore();
 
       context.beginPath();
-      context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      context.ellipse(centerX, centerY, radius, radius * 0.63, 0, 0, Math.PI * 2);
       context.strokeStyle = 'rgba(122, 243, 255, 0.62)';
       context.lineWidth = 2;
       context.stroke();
@@ -452,6 +530,8 @@
         context.stroke();
       });
       context.restore();
+
+      drawHolographicLabels(context, centerX, centerY, radius, hasLocation);
 
       if (hasLocation) {
         const target = projectGlobePoint(baseLongitude, baseLatitude, centerLongitude, centerLatitude, radius, centerX, centerY);
